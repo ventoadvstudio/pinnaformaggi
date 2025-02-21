@@ -1,0 +1,52 @@
+.btn {
+  /* General */
+  @apply inline-block text-14 text-center px-35 py-12 font-bold uppercase rounded border border-solid transition-colors duration-300;
+  &:focus {
+    @apply outline-none;
+  }
+
+  &--tiny {
+    min-width: 148px;
+  }
+
+  /* Size */
+  &--small {
+    min-width: 167px;
+    @apply px-12;
+  }
+
+  &--normal {
+    min-width: 188px;
+  }
+
+  &--large {
+    min-width: 200px;
+  }
+
+  /* Color */
+  &--primary {
+    @apply text-cream bg-primary border-primary;
+    &:hover {
+      @apply bg-olive border-olive;
+    }
+  }
+
+  &--secondary {
+    @apply text-primary bg-cream border-cream;
+    &:hover {
+      @apply bg-cream-400 border-cream-400;
+    }
+  }
+
+  &--outline {
+    @apply text-primary bg-transparent border-primary;
+    &:hover {
+      @apply text-cream bg-olive border-olive;
+    }
+  }
+}
+
+/* Safari fixes */
+a.btn {
+  -webkit-appearance: none;
+}
