@@ -1424,6 +1424,7 @@ function getRecipe(locale, slug) {
           alt
           filename
         }
+        consigli(markdown: true)
         relatedProducts {
           name
           slug
