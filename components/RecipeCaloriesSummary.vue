@@ -43,6 +43,11 @@
       </div>
     </div>
   </div>
+  <div>
+    <p>
+              {{ $t('recipe.extra.consigli') }}
+    </p>
+  </div>
 </template>
 
 <script>
