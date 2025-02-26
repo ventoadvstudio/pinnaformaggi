@@ -43,9 +43,9 @@
       </div>
     </div>
   </div>
-  <div v-if="consigli">
-    <h2>Consigli e conservazione</h2>
-    <span class="text-16 text-cream-800 font-medium mt-16">{{ consigli }}</span>
+  <div>
+    <h2 class="uppercase font-medium text-24 text-primary">{{ consigli.title }}</h2>
+    <span class="text-16 text-cream-800 font-medium mt-16">{{ consigli.content }}</span>
   </div>
 </template>
 

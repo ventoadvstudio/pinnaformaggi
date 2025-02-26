@@ -1327,7 +1327,10 @@ function getRecipe(locale, slug) {
           name
           slug
         }
-        consigli(markdown: true)
+        consigli(markdown: true){
+        content
+        title
+        }
         keywords
         calories
         cuisine
