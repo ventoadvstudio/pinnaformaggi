@@ -44,8 +44,9 @@
     </div>
   </div>
   <div>
+    <h2>Consigli e conservazione</h2>
     <p>
-              {{ $t('recipe.extra.consigli') }}
+      {{ $t('recipe.extra.consigli') }}
     </p>
   </div>
 </template>
