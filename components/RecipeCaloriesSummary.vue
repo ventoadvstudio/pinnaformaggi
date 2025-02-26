@@ -43,7 +43,7 @@
         <div>
     <h2 class="uppercase font-medium text-24 text-primary">Consigli e conservazione</h2>
     <p>
-      {{ consigli }}
+      {{ $t('recipe.extra.consigli') }}
     </p>
   </div>
       </div>
@@ -78,6 +78,10 @@ export default {
           ],
         },
       ],
+    },
+    consigli: {
+      type: String,
+      default: '',
     },
   },
   data() {
