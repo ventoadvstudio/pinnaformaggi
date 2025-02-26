@@ -42,9 +42,9 @@
         <div class="border-b border-solid border-cream-600" />
         <div>
     <h2 class="uppercase font-medium text-24 text-primary">Consigli e conservazione</h2>
-    <p>
-      {{ $t('recipe.extra.consigli') }}
-    </p>
+    <span >
+      {{ recipe.consigli }}
+    </span>
   </div>
       </div>
     </div>
