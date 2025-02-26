@@ -1329,7 +1329,6 @@ function getRecipe(locale, slug) {
         }
         consigli(markdown: true){
         content
-        title
         }
         keywords
         calories
