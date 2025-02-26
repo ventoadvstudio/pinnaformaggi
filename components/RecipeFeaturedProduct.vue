@@ -25,6 +25,12 @@
         <ChevronDown class="transform -rotate-90" />
       </div>
     </div>
+    <div>
+    <h2 class="uppercase font-medium text-24 text-primary">Consigli e conservazione</h2>
+    <span class="text-right ml-16 font-bold flex-auto flex-shrink-0">
+      {{ consigli }}
+    </span>
+  </div>
   </div>
 </template>
 <script>
@@ -49,6 +55,10 @@ export default {
     ctaUrl: {
       type: String,
       required: true,
+    },
+    consigli: {
+      type: String,
+      default:'',
     },
   },
 }

@@ -40,12 +40,6 @@
           </div>
         </transition>
         <div class="border-b border-solid border-cream-600" />
-        <div>
-    <h2 class="uppercase font-medium text-24 text-primary">Consigli e conservazione</h2>
-    <span class="text-right ml-16 font-bold flex-auto flex-shrink-0">
-      {{ $t('recipe.consigli') }}
-    </span>
-  </div>
       </div>
     </div>
   </div>
