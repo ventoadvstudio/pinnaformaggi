@@ -1,9 +1,6 @@
 <template>
   <div class="recipe-method">
-    <h2 class="uppercase text-primary font-medium font-title text-24 mb-16">
-      {{ title }}
-    </h2>
-            <h2 class="uppercase font-medium text-24 text-primary">
+            <h2 class="uppercase text-primary font-medium font-title text-24 mb-16">
               Consigli e Conservazione
             </h2>
             {{ consigli }}
