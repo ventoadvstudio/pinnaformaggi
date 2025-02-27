@@ -64,6 +64,12 @@
         class="md:px-0 md:col-start-3 md:col-span-8 lg:col-start-3 lg:col-span-8 xl:col-start-4 xl:col-span-6"
       >
         <RecipeMethod :title="method.title" :sections="method.items" />
+
+        <RecipeConsigli
+          v-if="consigli && consigli.length > 0"
+          :title="consigli[0].title"
+          :description="consigli[0].description"
+          :author="consigli[0].author"/>
       </div>
 
       <!--       <div
@@ -144,6 +150,7 @@ import ApiService from '@/services/api.service'
 import RatingStars from '@/components/RatingStars.vue'
 import QuestionsAndAnswers from '@/components/QuestionsAndAnswers'
 import { handleSlug, handleAltText, handleSlugLocales } from '@/utils'
+import RecipeConsigli from '@/components/RecipeConsigli'
 
 const mapRecipeGroupedLists = (items) => {
   const final = []
@@ -236,6 +243,7 @@ export default {
     VideoPlayer,
     RatingStars,
     QuestionsAndAnswers,
+    RecipeConsigli
   },
   extends: BasePage,
   async asyncData({ app, params, store }) {
@@ -395,6 +403,7 @@ export default {
       originalRecipe: recipe,
       seo: recipe.seo,
       calorie: recipe.calories,
+      consigli: recipe.consigli,
     }
   },
   data() {
