@@ -70,6 +70,11 @@
           :title="consigli[0].title"
           :description="consigli[0].description"
           :author="consigli[0].author"/>
+          
+          <div
+            class="text-cream-700 markdown"
+            v-html="sanitizedconsigli"
+          ></div>
 
           {{ consigli }}
       </div>
