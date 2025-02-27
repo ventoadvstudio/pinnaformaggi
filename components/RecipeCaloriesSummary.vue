@@ -42,7 +42,7 @@
         <div class="border-b border-solid border-cream-600" />
       </div>
       <div>
-    <h2 v-if="consigli" class="uppercase font-medium text-24 text-primary">{{ title }}</h2>
+    <h2 v-if="consigli" class="uppercase font-medium text-24 text-primary">Consigli e Conservazione</h2>
     <span class="text-16 text-cream-800 font-medium mt-16">{{ consigli }}</span>
   </div>
     </div>
