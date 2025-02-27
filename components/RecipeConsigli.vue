@@ -22,10 +22,9 @@
 </template>
 
 <script>
-// import ChevronDown from 'assets/icons/chevron-down-black.svg?inline'
 
 export default {
-  // components: { ChevronDown },
+
   props: {
     consigli:{
       type: String,

@@ -10,6 +10,7 @@
     />
     <div class="container px-0 md:px-20 mt-40">
       <RecipeGrid :items="recipes" />
+      <RecipeConsigli :items="consigli"/>
     </div>
     <div class="container lg:grid lg:grid-cols-12 lg:gap-30 mt-60 md:mt-180">
       <div
@@ -24,12 +25,14 @@ import SectionCoverCTA from '@/components/SectionCoverCTA'
 import RecipeGrid from '@/components/RecipeGrid'
 import ApiService from '@/services/api.service'
 import BasePage from '@/components/BasePage'
+import RecipeConsigli from '@/components/RecipeConsigli'
 import { handleSlug, handleAltText } from '@/utils'
 
 export default {
   components: {
     SectionCoverCTA,
     RecipeGrid,
+    RecipeConsigli,
   },
   extends: BasePage,
   async asyncData({ app, store }) {
@@ -46,6 +49,7 @@ export default {
         time: `${recipe.duration} ${store.state.common[locale].minutesLabel}`,
         ctaLabel: store.state.common[locale].discoverMoreLabel,
         ctaUrl: handleSlug(locale, 'recipe', recipe.slug),
+        consigli: `${recipe.consigli}`,
       })),
       seoText: recipesPage.seoText,
       seo: recipesPage.seo,
