@@ -70,6 +70,8 @@
           :title="consigli[0].title"
           :description="consigli[0].description"
           :author="consigli[0].author"/>
+
+          {{ consigli }}
       </div>
 
       <!--       <div
@@ -434,6 +436,7 @@ export default {
       originalRecipe: {},
       seo: {},
       calorie: '',
+      consigli:'',
     }
   },
   computed: {
