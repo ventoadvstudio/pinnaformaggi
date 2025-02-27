@@ -1,23 +1,13 @@
 <template>
-  <div class="recipe-calories">
-    <div
-      class="recipe-calories__container container lg:grid lg:grid-cols-12 lg:gap-30">
-      <div
-        class="recipe-calories__content md:px-0 md:col-start-3 md:col-span-8 lg:col-start-3 lg:col-span-8 xl:col-start-4 xl:col-span-6">
-        <div
-          class="font-title flex flex-row justify-between items-center border-solid border-t border-cream-600">
-          <div class="flex flex-row items-baseline gap-8 py-16">
+  <div class="recipe-method">
+    <h2 class="uppercase text-primary font-medium font-title text-24 mb-16">
+      {{ title }}
+    </h2>
             <h2 class="uppercase font-medium text-24 text-primary">
               Consigli e Conservazione
             </h2>
             {{ consigli }}
-          </div>
           
-        </div>
-
-        <div class="border-b border-solid border-cream-600" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -26,6 +16,10 @@
 export default {
 
   props: {
+    title:{
+      type: String,
+      default:'',
+    },
     consigli:{
       type: String,
       default:'',
@@ -35,12 +29,6 @@ export default {
     return {
       isOpen: false,
     }
-  },
-  methods: {
-    handleClick() {
-      this.isOpen = !this.isOpen
-      console.log('isOpen', this.isOpen)
-    },
   },
 }
 </script>
