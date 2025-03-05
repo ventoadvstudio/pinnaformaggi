@@ -1899,6 +1899,7 @@ function getRecipesByCategory(locale, categoryID) {
   )}) {
         name
         slug
+        duration
         picture {
           url
           alt
