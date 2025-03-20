@@ -1349,7 +1349,7 @@ function getRecipe(locale, slug) {
           url
           alt
           filename
-          responsiveImage(imgixParams: {fit: clip, w: 600, auto: format}) {
+          responsiveImage(imgixParams: {fit: clip, w: 600, auto: format,compress}) {
             src
             width
             height
@@ -1374,7 +1374,7 @@ function getRecipe(locale, slug) {
               url
               alt
               filename
-              responsiveImage(imgixParams: {fit: clip, w: 300, auto: format}) {
+              responsiveImage(imgixParams: {fit: clip, w: 300, auto: format,compress}) {
                 src
                 width
                 height
@@ -1436,7 +1436,7 @@ function getRecipe(locale, slug) {
               url
               alt
               filename
-              responsiveImage(imgixParams: {w: 600, fit: clip, auto: format}) {
+              responsiveImage(imgixParams: {w: 600, fit: clip, auto: format,compress}) {
                 src
                 width
                 height
