@@ -494,6 +494,12 @@ export default {
                   ? [this.video.thumbnail.url]
                   : undefined,
                 contentUrl: this.video.sources[0].url,
+                uploadDate: this.originalRecipe._firstPublishedAt
+                  ? new Date(this.originalRecipe._firstPublishedAt)
+                      .toISOString()
+                      .split('T')[0]
+                  : undefined,
+                description: this.originalRecipe.description,
               }
             : undefined,
       }
