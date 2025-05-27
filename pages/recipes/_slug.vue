@@ -75,7 +75,6 @@
             class="text-cream-700 markdown"
             v-html="sanitizedRecipeconsigli"
           ></div>
-        </div>
 
       </div>
 
@@ -456,7 +455,7 @@ export default {
         '@context': 'https://schema.org',
         '@type': 'Recipe',
         author: {
-          '@type': this.authorType ? this.authorType : '@Organization',
+          '@type': this.authorType ? this.authorType : 'Organization',
           name: this.author,
         },
         recipeCuisine: this.originalRecipe.cuisine,
