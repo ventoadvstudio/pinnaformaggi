@@ -44,11 +44,8 @@
               class="search-results__list__item md:mb-40 mb-25 cursor-pointer"
               @click="onClick(entry.url)"
             >
-             <p class="text-20 font-semibold mb-6 text-primary">
-                {{ entry.image }}
-              </p>
               <p class="text-20 font-semibold mb-6 text-primary">
-                {{ entry.title }}
+                {{ entry.image }} {{ entry.title }}
               </p>
               <div
                 class="text-12 md:text-14 text-gray-300 truncate"
@@ -137,7 +134,9 @@ export default {
             title: el.raw.title,
             body: el.raw.body,
             url: el.url,
-            image: el.raw.image,
+            image: el.image
+              ? `<img src="${el.image.url}" alt="${el.image.alt}" class="w-100 h-auto" />`
+              : '',
           }))
         )
         this.totalResults = total
