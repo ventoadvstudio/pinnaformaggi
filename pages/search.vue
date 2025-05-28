@@ -146,7 +146,7 @@ export default {
             title: el.raw.title,
             body: el.raw.body,
             url: el.url,
-            image:el.raw.image ? el.raw.image.url : null,
+            image:el.raw.picture ? el.raw.picture.url : null,
           }))
         )
         this.totalResults = total
