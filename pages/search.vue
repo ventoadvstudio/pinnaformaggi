@@ -144,9 +144,9 @@ export default {
         this.entries.push(
           ...results.map((el) => ({
             title: el.raw.title,
-            body: el.raw.body,
+            body: el.raw.body, 
             url: el.url,
-            image:el.raw.picture ? el.raw.picture.url : null,
+            image:el.raw.image,
           }))
         )
         this.totalResults = total
