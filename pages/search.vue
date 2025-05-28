@@ -44,7 +44,18 @@
               class="search-results__list__item md:mb-40 mb-25 cursor-pointer"
               @click="onClick(entry.url)"
             >
-            <div :style="`background-image: url(${entry.image.url}); width:200px; height:100px;`"></div>
+            <div>
+              <img
+                v-if="entry.image"
+                :src="entry.image"
+                alt="Search Result Image"
+                class="w-full h-200 object-cover rounded-lg mb-10"
+              />
+              <div
+                v-else
+                class="w-full h-200 bg-gray-200 rounded-lg mb-10"
+              ></div>
+            </div>
               <p class="text-20 font-semibold mb-6 text-primary">
                 {{ entry.title }}
               </p>
