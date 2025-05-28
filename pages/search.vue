@@ -44,18 +44,7 @@
               class="search-results__list__item md:mb-40 mb-25 cursor-pointer"
               @click="onClick(entry.url)"
             >
-            <div>
-              <img
-                v-if="entry.image"
-                :src="entry.image"
-                alt="Search Result Image"
-                class="w-full h-200 object-cover rounded-lg mb-10"
-              />
-              <div
-                v-else
-                class="w-full h-200 bg-gray-200 rounded-lg mb-10"
-              ></div>
-            </div>
+            
               <p class="text-20 font-semibold mb-6 text-primary">
                 {{ entry.title }}
               </p>
@@ -146,7 +135,6 @@ export default {
             title: el.raw.title,
             body: el.raw.body, 
             url: el.url,
-            image:el.raw.picture.url,
           }))
         )
         this.totalResults = total
