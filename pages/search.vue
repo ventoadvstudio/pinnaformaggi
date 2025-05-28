@@ -45,7 +45,10 @@
               @click="onClick(entry.url)"
             >
               <p class="text-20 font-semibold mb-6 text-primary">
-                {{ entry.image }} {{ entry.title }}
+                <RecipePresentation
+      :img="presentation.img"
+    />
+                {{ entry.title }}
               </p>
               <div
                 class="text-12 md:text-14 text-gray-300 truncate"
@@ -71,11 +74,13 @@
 import SearchIcon from '@/assets/icons/search-cream.svg?inline'
 import BasePage from '@/components/BasePage'
 import Spinner from '@/components/Spinner'
+import RecipePresentation from '@/components/RecipePresentation'
 
 export default {
   components: {
     SearchIcon,
     Spinner,
+    RecipePresentation
   },
   extends: BasePage,
   data() {
@@ -88,6 +93,7 @@ export default {
       loading: false,
       totalResults: 0,
       client: null,
+      presentation:{},
     }
   },
   mounted() {
@@ -134,9 +140,6 @@ export default {
             title: el.raw.title,
             body: el.raw.body,
             url: el.url,
-            image: el.image
-              ? `<img src="${el.image.url}" alt="${el.image.alt}" class="w-100 h-auto" />`
-              : '',
           }))
         )
         this.totalResults = total
