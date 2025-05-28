@@ -44,10 +44,8 @@
               class="search-results__list__item md:mb-40 mb-25 cursor-pointer"
               @click="onClick(entry.url)"
             >
+            <div :style="`background-image: url(${entry.image.url}); width:200px; height:100px;`"></div>
               <p class="text-20 font-semibold mb-6 text-primary">
-                <RecipePresentation
-      :img="presentation.img"
-    />
                 {{ entry.title }}
               </p>
               <div
@@ -74,13 +72,11 @@
 import SearchIcon from '@/assets/icons/search-cream.svg?inline'
 import BasePage from '@/components/BasePage'
 import Spinner from '@/components/Spinner'
-import RecipePresentation from '@/components/RecipePresentation'
 
 export default {
   components: {
     SearchIcon,
     Spinner,
-    RecipePresentation
   },
   extends: BasePage,
   data() {
@@ -93,7 +89,6 @@ export default {
       loading: false,
       totalResults: 0,
       client: null,
-      presentation:{},
     }
   },
   mounted() {
@@ -140,6 +135,7 @@ export default {
             title: el.raw.title,
             body: el.raw.body,
             url: el.url,
+            image:el.raw.image ? el.raw.image.url : null,
           }))
         )
         this.totalResults = total
