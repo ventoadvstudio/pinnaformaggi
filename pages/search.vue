@@ -44,6 +44,9 @@
               class="search-results__list__item md:mb-40 mb-25 cursor-pointer"
               @click="onClick(entry.url)"
             >
+             <p class="text-20 font-semibold mb-6 text-primary">
+                {{ entry.image }}
+              </p>
               <p class="text-20 font-semibold mb-6 text-primary">
                 {{ entry.title }}
               </p>
@@ -134,6 +137,7 @@ export default {
             title: el.raw.title,
             body: el.raw.body,
             url: el.url,
+            image: el.raw.image,
           }))
         )
         this.totalResults = total
