@@ -1420,6 +1420,7 @@ function getRecipe(locale, slug) {
             thumbnailUrl
           }
         }
+        videotubo
         videoThumbnail {
           url
           alt

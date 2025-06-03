@@ -35,6 +35,12 @@
           :cta-url="featuredProduct.ctaUrl"
           class="mt-40"
         />
+        <div v-if="videotubo && videotubo.length > 0" class="mt-40">
+          
+          <div class="text-cream-700 markdown" v-html="videotubo"></div>
+
+
+        </div>
         <div
           v-if="video && video.sources.length"
           class="mt-40 md:mt-80 text-center"
@@ -410,6 +416,7 @@ export default {
       seo: recipe.seo,
       calorie: recipe.calories,
       consigli: recipe.consigli,
+      videotubo: recipe.videotubo,
     }
   },
   data() {
@@ -441,6 +448,7 @@ export default {
       seo: {},
       calorie: '',
       consigli:'',
+      videotubo: '',
     }
   },
   computed: {
