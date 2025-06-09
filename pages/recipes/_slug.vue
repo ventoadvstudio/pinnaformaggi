@@ -9,6 +9,10 @@
       :info="info"
       :categories="categories"
     />
+    <div v-if="cuisine && cuisine.length > 0" class="container mt-20">
+      <h2 class="font-title font-medium text-24 uppercase mb-8 text-primary">
+        Cucina: </h2> {{ cuisine }}
+    </div>
     <div class="container lg:grid lg:grid-cols-12 lg:gap-30">
       <div class="lg:col-start-3 lg:col-span-8 xl:col-start-4 xl:col-span-6">
         <div
@@ -399,6 +403,7 @@ export default {
       calorie: recipe.calories,
       consigli: recipe.consigli,
       videotubo: recipe.videotubo,
+      cuisine: recipe.cuisine,
     }
   },
   data() {
