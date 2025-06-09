@@ -11,6 +11,10 @@
     />
     <div class="container lg:grid lg:grid-cols-12 lg:gap-30">
       <div class="lg:col-start-3 lg:col-span-8 xl:col-start-4 xl:col-span-6">
+        <div>
+<h2>TIPO CUCINA: {{ cucina }}</h2>
+
+        </div>
         <div
           v-if="
             sanitizedRecipeDescription && sanitizedRecipeDescription.length > 0
@@ -276,12 +280,15 @@ export default {
         : '',
       backLabel: category.name,
     }))
+  
+
     if (recipe.cuisine) {
-      categories.push({
-        backUrl: '',
-        backLabel: recipe.cuisine,
-      })
-    }
+      const cucina = recipeCuisine.map((cuisine) => ({
+        backUrl: handleSlug(locale, 'recipeCuisine', cuisine.slug),
+        backLabel: cuisine.name, 
+      }))
+
+      }
 
     if (recipe.keywords) {
       recipe.keywords.split(',').forEach((keyword) => {
