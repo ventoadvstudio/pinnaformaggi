@@ -276,21 +276,6 @@ export default {
         : '',
       backLabel: category.name,
     }))
-  
-
-    
-
-    if (recipe.keywords) {
-      recipe.keywords.split(',').forEach((keyword) => {
-        const singleKeyword = keyword.trim()
-        if (singleKeyword) {
-          categories.push({
-            backUrl: '',
-            backLabel: singleKeyword,
-          })
-        }
-      })
-    }
 
     if (recipe.featuredProduct) {
       const { allRecipes } = await ApiService.getRecipesByProduct(
