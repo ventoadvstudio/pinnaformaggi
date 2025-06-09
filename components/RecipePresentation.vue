@@ -30,6 +30,11 @@
             :back-url="category.backUrl"
           />
         </div>
+
+        <div v-if="cuisine && cuisine.length > 0" class="mt-20">
+          <span class="text-14 leading-snug text-gray-500">
+            Cucina: {{ cuisine }}
+          </span></div>
         <!--        <div class="text-14 leading-snug text-gray-500 mt-15">-->
         <!--          <span v-for="(tag, index) of tags" :key="index.toString()">-->
         <!--            {{ tag }}-->
@@ -109,7 +114,12 @@ export default {
         type: String,
         default: '',
       },
+      
     },
+    cuisine: {
+        type: String,
+        default: '',
+      },
   },
 }
 </script>
