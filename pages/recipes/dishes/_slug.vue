@@ -29,8 +29,6 @@ import { handleSlug, handleAltText, handleSlugLocales } from '@/utils'
 import BasePage from '@/components/BasePage'
 import RecipeTag from '../../../components/RecipeTag.vue'
 import RecipePresentation from '../../../components/RecipePresentation.vue'
-import RecipeTag from '../../../components/RecipeTag.vue'
-import RecipeTag from '../../../components/RecipeTag.vue'
 
 export default {
   name: 'RecipeDishPage',
