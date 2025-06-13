@@ -9,11 +9,10 @@
     />
     <div class="flex flex-row flex-wrap justify-center gap-8 mt-20">
      <RecipeTag
-        v-if="catinterne.backLabel"
-        :back-label="catinterne.backLabel"
-        :back-url="catinterne.backUrl"
+        v-if="cateinterne.backLabel"
+        :back-label="cateinterne.backLabel"
+        :back-url="cateinterne.backUrl"
         class="mb-20 md:mb-0"
-        data-datocms-noindex
     />
         </div>
     <div class="container px-0 md:px-20 mt-40">
@@ -64,6 +63,13 @@ export default {
     )
     const { allRecipeDishes } = await ApiService.getRecipeDishes(locale)
 
+    const catinterne = recipeDish.catinterne.map((cateinterne) => ({
+      backUrl: cateinterne.slug
+        ? handleSlug(locale, 'recipeCategory', cateinterne.slug)
+        : '',
+      backLabel: cateinterne.name,
+    }))
+
     return {
       sectionCoverSwitch: {
         title: recipeDish.name,
@@ -74,12 +80,7 @@ export default {
           url: handleSlug(locale, 'recipeDish', category.slug),
         })),
       },
-      catinterne: {
-        backLabel: recipeDish.catinterne ? recipeDish.catinterne.name : '',
-        backUrl: recipeDish.catinterne
-          ? handleSlug(locale, 'recipeDish', recipeDish.catinterne.slug)
-          : '/',
-      },
+      catinterne,
       recipes: allRecipes.map((recipe) => ({
         img: recipe.picture ? handleAltText(recipe.picture) : '',
         title: recipe.name,
