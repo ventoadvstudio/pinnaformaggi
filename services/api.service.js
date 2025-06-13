@@ -1516,6 +1516,10 @@ function getRecipeDishPage(locale, slug) {
           alt
           filename
         }
+          catinterne {
+          name
+          slug
+        }
         seo {
           description
           title

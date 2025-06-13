@@ -7,6 +7,14 @@
       :links="sectionCoverSwitch.links"
       :margin-head="true"
     />
+    <div class="flex flex-row flex-wrap justify-center gap-8 mt-20">
+          <RecipeTag
+            v-for="(cateinter, index) of catinterne"
+            :key="index.toString()"
+            :back-label="cateinter.backLabel"
+            :back-url="cateinter.backUrl"
+          />
+        </div>
     <div class="container px-0 md:px-20 mt-40">
       <RecipeGrid :items="recipes" />
     </div>
@@ -31,6 +39,22 @@ export default {
     SectionCoverSwitch,
     RecipeGrid,
   },
+  catinterne: {
+      type: Array,
+      default: () => [],
+      validator: (data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (typeof data[i] !== 'object') {
+            if (
+              typeof data[i].backUrl !== 'string' &&
+              typeof data[i].backLabel !== 'string'
+            )
+              return false
+          }
+        }
+        return true
+      },
+    },
   extends: BasePage,
   async asyncData({ app, store, params }) {
     const locale = app.i18n.locale
