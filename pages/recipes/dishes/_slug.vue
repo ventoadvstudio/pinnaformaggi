@@ -32,12 +32,14 @@ import RecipeGrid from '@/components/RecipeGrid'
 import ApiService from '@/services/api.service'
 import { handleSlug, handleAltText, handleSlugLocales } from '@/utils'
 import BasePage from '@/components/BasePage'
+import RecipeTag from '../../../components/RecipeTag.vue'
 
 export default {
   name: 'RecipeDishPage',
   components: {
     SectionCoverSwitch,
     RecipeGrid,
+    RecipeTag,
   },
   catinterne: {
       type: Array,
