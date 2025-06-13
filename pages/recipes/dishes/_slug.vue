@@ -101,6 +101,7 @@ export default {
       sectionCoverSwitch: {},
       recipes: [],
       seoText: '',
+      catinterne:[],
     }
   },
   computed: {
