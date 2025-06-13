@@ -8,12 +8,12 @@
       :margin-head="true"
     />
     <div class="flex flex-row flex-wrap justify-center gap-8 mt-20">
-     <RecipeTag
-        v-if="cateinterne.backLabel"
-        :back-label="cateinterne.backLabel"
-        :back-url="cateinterne.backUrl"
-        class="mb-20 md:mb-0"
-    />
+      <RecipeTag
+        v-for="(category, index) of catinterne"
+        :key="index.toString()"
+        :back-label="category.backLabel"
+        :back-url="category.backUrl"
+      />
         </div>
     <div class="container px-0 md:px-20 mt-40">
       <RecipeGrid :items="recipes" />
