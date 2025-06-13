@@ -8,12 +8,7 @@
       :margin-head="true"
     />
     <div class="flex flex-row flex-wrap justify-center gap-8 mt-20">
-          <RecipeTag
-            v-for="(cateinter, index) of catinterne"
-            :key="index.toString()"
-            :back-label="cateinter.backLabel"
-            :back-url="cateinter.backUrl"
-          />
+          <RecipeTag :items="catinterne" />
         </div>
     <div class="container px-0 md:px-20 mt-40">
       <RecipeGrid :items="recipes" />
@@ -32,6 +27,9 @@ import RecipeGrid from '@/components/RecipeGrid'
 import ApiService from '@/services/api.service'
 import { handleSlug, handleAltText, handleSlugLocales } from '@/utils'
 import BasePage from '@/components/BasePage'
+import RecipeTag from '../../../components/RecipeTag.vue'
+import RecipePresentation from '../../../components/RecipePresentation.vue'
+import RecipeTag from '../../../components/RecipeTag.vue'
 import RecipeTag from '../../../components/RecipeTag.vue'
 
 export default {
@@ -93,6 +91,10 @@ export default {
         time: `${recipe.duration} ${store.state.common[locale].minutesLabel}`,
         ctaLabel: store.state.common[locale].visitRecipeLabel,
         ctaUrl: handleSlug(locale, 'recipe', recipe.slug),
+      })),
+      catinterne: allRecipeDishes.map((cateinterne) => ({
+        backLabel: cateinterne.name,
+        backUrl: handleSlug(locale, 'recipeDish', cateinterne.slug),
       })),
       seoText: recipeDish.seoText,
       seo: recipeDish.seo,
