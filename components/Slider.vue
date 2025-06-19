@@ -182,7 +182,7 @@ export default {
     },
   },
   data() {
-    const enoughSlides = this.items.length > 2
+    const enoughSlides = this.items.length > 3
     return {
       enoughSlides,
       options: {

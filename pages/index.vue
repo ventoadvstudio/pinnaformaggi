@@ -17,7 +17,7 @@
       :title="recipesSlider.title"
       :description="recipesSlider.description"
       :items="recipesSlider.items"
-      :items-per-group="3"
+      :items-per-group="2"
       cover
     />
     <ImageSection
