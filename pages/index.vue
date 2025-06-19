@@ -18,6 +18,7 @@
       :description="recipesSlider.description"
       :items="recipesSlider.items"
       :items-per-group="3"
+      :initial-slide="3"
       cover
     />
     <ImageSection
