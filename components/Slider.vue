@@ -222,7 +222,7 @@ export default {
             loop: enoughSlides,
             loopFillGroupWithBlank: enoughSlides,
             slidesPerGroup: 1,
-            slidesPerView: 3.5,
+            slidesPerView: enoughSlides ? 3.5 : 2.5,
             spaceBetween: 30,
           },
         },
