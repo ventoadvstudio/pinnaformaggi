@@ -18,7 +18,6 @@
       :description="recipesSlider.description"
       :items="recipesSlider.items"
       :items-per-group="3"
-      :items.active-class="index === 0 ? 'active' : ''"
       cover
     />
     <ImageSection
