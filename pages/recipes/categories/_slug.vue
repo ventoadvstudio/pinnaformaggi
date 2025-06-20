@@ -7,14 +7,14 @@
       :links="sectionCoverSwitch.links"
       :margin-head="true"
     />
-    <div class="container px-0 md:px-20 mt-40">
-      <RecipeGrid :items="recipes" />
-    </div>
     <div class="container lg:grid lg:grid-cols-12 lg:gap-30 mt-60 md:mt-180">
       <div
         class="products-page__text markdown text-14 md:text-16 text-gray-500 lg:col-start-3 lg:col-span-8 xl:col-start-4 xl:col-span-6"
         v-html="sanitizedSeoText"
       ></div>
+    </div>
+    <div class="container px-0 md:px-20 mt-40">
+      <RecipeGrid :items="recipes" />
     </div>
   </main>
 </template>
