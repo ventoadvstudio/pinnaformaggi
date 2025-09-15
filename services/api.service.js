@@ -5,7 +5,8 @@ import 'cross-fetch/polyfill'
 function getRecipeBookPage(locale) {
   const query = `
     query RecipeBookPage($locale: SiteLocale) {
-      recipeBook(locale: $locale) {
+      // Il nome del campo in GraphQL deve corrispondere all'ID del modello in DatoCMS
+      recipe_book(locale: $locale) {
         title
         heroBackground {
           responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
