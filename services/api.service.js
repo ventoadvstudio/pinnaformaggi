@@ -1,45 +1,43 @@
-async getRecipeBookPage(locale) {
-    const { data } = await this.query({
-        query: `
-            query RecipeBookPage($locale: SiteLocale) {
-                recipeBook(locale: $locale) {
-                    title
-                    heroBackground {
-                        responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-                            srcSet
-                            webpSrcSet
-                            sizes
-                            src
-                            width
-                            height
-                            alt
-                            title
-                            base64
-                        }
-                    }
-                    bottomImage {
-                      responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-                            srcSet
-                            webpSrcSet
-                            sizes
-                            src
-                            width
-                            height
-                            alt
-                            title
-                            base64
-                        }
-                    }
-                }
-            }
-        `,
-        variables: { locale },
-    });
-    return data;
-},
-
+// La nuova versione di getRecipeBookPage che usa le Promise
 import { GraphQLClient } from 'graphql-request'
 import 'cross-fetch/polyfill'
+
+function getRecipeBookPage(locale) {
+  const query = `
+    query RecipeBookPage($locale: SiteLocale) {
+      recipeBook(locale: $locale) {
+        title
+        heroBackground {
+          responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            alt
+            title
+            base64
+          }
+        }
+        bottomImage {
+          responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+            srcSet
+            webpSrcSet
+            sizes
+            src
+            width
+            height
+            alt
+            title
+            base64
+          }
+        }
+      }
+    }
+  `
+  return request({ query, variables: { locale } })
+}
 // import { Headers } from 'cross-fetch'
 
 // global.Headers = global.Headers || Headers
@@ -2186,6 +2184,7 @@ function getRecipeRatings(recipeId) {
 }
 
 export default {
+  getRecipeBookPage,
   getCommon,
   getHeader,
   getHome,
