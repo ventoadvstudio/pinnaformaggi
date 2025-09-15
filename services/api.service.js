@@ -1,3 +1,43 @@
+async getRecipeBookPage(locale) {
+    const { data } = await this.query({
+        query: `
+            query RecipeBookPage($locale: SiteLocale) {
+                recipeBook(locale: $locale) {
+                    title
+                    heroBackground {
+                        responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+                            srcSet
+                            webpSrcSet
+                            sizes
+                            src
+                            width
+                            height
+                            alt
+                            title
+                            base64
+                        }
+                    }
+                    bottomImage {
+                      responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
+                            srcSet
+                            webpSrcSet
+                            sizes
+                            src
+                            width
+                            height
+                            alt
+                            title
+                            base64
+                        }
+                    }
+                }
+            }
+        `,
+        variables: { locale },
+    });
+    return data;
+},
+
 import { GraphQLClient } from 'graphql-request'
 import 'cross-fetch/polyfill'
 // import { Headers } from 'cross-fetch'
