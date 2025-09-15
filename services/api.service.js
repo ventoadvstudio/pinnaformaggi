@@ -2,10 +2,10 @@
 import { GraphQLClient } from 'graphql-request'
 import 'cross-fetch/polyfill'
 
+// Funzione corretta per la pagina del ricettario
 function getRecipeBookPage(locale) {
   const query = `
     query RecipeBookPage($locale: SiteLocale) {
-      // Il nome del campo in GraphQL deve corrispondere all'ID del modello in DatoCMS
       recipe_book(locale: $locale) {
         title
         heroBackground {
