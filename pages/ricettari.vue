@@ -13,11 +13,27 @@
       <div
         class="relative z-20 container flex flex-col items-center justify-center text-center text-white"
       >
-        <h1 class="uppercase text-50 lg:text-80 font-heading">
+        <!-- Se vuoi un solo H1 in pagina, valuta di NON usare <h1> qui -->
+        <p class="uppercase text-50 lg:text-80 font-heading">
           {{ title }}
-        </h1>
+        </p>
       </div>
     </div>
+
+    <!-- BODY -->
+    <section class="container py-40">
+      <h1 class="text-34 lg:text-48 font-heading mb-4">
+        {{ titlebody }}
+      </h1>
+
+      <h2 v-if="subtitlebody" class="text-24 lg:text-32 text-gray-700 mb-6">
+        {{ subtitlebody }}
+      </h2>
+
+      <p v-if="textbody" class="text-base leading-relaxed">
+        {{ textbody }}
+      </p>
+    </section>
 
     <!-- BREVO FORM -->
     <section class="container py-60">
@@ -34,16 +50,17 @@ import { getRicettariPage } from '@/services/api.service'
 export default {
   async asyncData({ error }) {
     try {
-      const locale = 'it' // se usi i18n, ricava la lingua dinamicamente
+      const locale = 'it'
       const data = await getRicettariPage(locale)
-
-      if (!data) {
-        throw new Error('Ricettari non trovato')
-      }
+      if (!data) throw new Error('Ricettari non trovato')
 
       return {
         title: data.title || '',
         heroBackground: data.heroBackground || null,
+        // nuovi campi
+        titlebody: data.titlebody || '',
+        subtitlebody: data.subtitlebody || '',
+        textbody: data.textbody || '',
         brevoForm: data.brevoForm || '',
         seo: data.seo || [],
       }
@@ -52,16 +69,33 @@ export default {
     }
   },
 
+  mounted() {
+    // Migliora performance/a11y dell’iframe Brevo, se presente
+    this.$nextTick(() => {
+      const iframe = document.querySelector('.prose iframe')
+      if (iframe) {
+        iframe.setAttribute('loading', 'lazy')
+        iframe.setAttribute('title', 'Iscrizione Ricettari Brevo')
+        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin')
+        iframe.setAttribute(
+          'sandbox',
+          'allow-forms allow-scripts allow-same-origin'
+        )
+      }
+    })
+  },
+
   head() {
     const metaFromDato = Array.isArray(this.seo)
       ? this.seo
           .filter((t) => t.tag === 'meta')
           .map((t) => ({
-            hid: t.attributes?.name || t.attributes?.property || undefined,
+            hid:
+              (t.attributes && (t.attributes.name || t.attributes.property)) ||
+              undefined,
             ...t.attributes,
           }))
       : []
-
     const linksFromDato = Array.isArray(this.seo)
       ? this.seo
           .filter((t) => t.tag === 'link')
@@ -69,7 +103,7 @@ export default {
       : []
 
     return {
-      title: this.title || 'Ricettari',
+      title: this.titlebody || this.title || 'Ricettari',
       meta: metaFromDato,
       link: linksFromDato,
     }
