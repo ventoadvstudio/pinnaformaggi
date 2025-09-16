@@ -1,10 +1,12 @@
 <template>
   <main class="recipe-book-page overflow-hidden">
+    <!-- HERO -->
     <div class="relative pb-100 pt-110 md:pb-140 lg:pt-180 lg:pb-420">
       <datocms-image
+        v-if="heroBackground && heroBackground.responsiveImage"
         class="absolute inset-0 object-cover w-full h-full"
         :data="heroBackground.responsiveImage"
-        :alt="heroBackground.alt"
+        :alt="heroBackground.alt || ''"
         layout="fill"
         object-fit="cover"
       />
@@ -16,48 +18,61 @@
         </h1>
       </div>
     </div>
-    <div class="relative">
-      <datocms-image
-        :data="bottomImage.responsiveImage"
-        class="object-contain w-full"
-        layout="intrinsic"
-      />
-    </div>
+
+    <!-- BREVO FORM -->
+    <section class="container py-60">
+      <!-- embed controllato: iframe Brevo -->
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <div class="prose max-w-none" v-html="brevoForm"></div>
+    </section>
   </main>
 </template>
 
 <script>
-import ApiService from '@/services/api.service';
-import { handleAltText } from '@/utils';
-import BasePage from '@/components/BasePage';
+import { getRicettariPage } from '@/services/api.service'
 
 export default {
-  extends: BasePage,
-  async asyncData({ app }) {
-    const locale = app.i18n.locale;
-    const { recipeBook } = await ApiService.getRecipeBookPage(locale);
+  async asyncData({ error }) {
+    try {
+      const locale = 'it' // se usi i18n, ricava la lingua dinamicamente
+      const data = await getRicettariPage(locale)
+
+      if (!data) {
+        throw new Error('Ricettari non trovato')
+      }
+
+      return {
+        title: data.title || '',
+        heroBackground: data.heroBackground || null,
+        brevoForm: data.brevoForm || '',
+        seo: data.seo || [],
+      }
+    } catch (e) {
+      error({ statusCode: 404, message: 'Pagina non trovata' })
+    }
+  },
+
+  head() {
+    const metaFromDato = Array.isArray(this.seo)
+      ? this.seo
+          .filter((t) => t.tag === 'meta')
+          .map((t) => ({
+            hid: t.attributes?.name || t.attributes?.property || undefined,
+            ...t.attributes,
+          }))
+      : []
+
+    const linksFromDato = Array.isArray(this.seo)
+      ? this.seo
+          .filter((t) => t.tag === 'link')
+          .map((t) => ({ ...t.attributes }))
+      : []
+
     return {
-      ...recipeBook,
-      heroBackground: handleAltText(recipeBook.heroBackground),
-      bottomImage: handleAltText(recipeBook.bottomImage),
-    };
+      title: this.title || 'Ricettari',
+      meta: metaFromDato,
+      link: linksFromDato,
+    }
   },
-  data() {
-    return {
-      title: '',
-      heroBackground: {
-        responsiveImage: {},
-      },
-      bottomImage: {
-        responsiveImage: {},
-      },
-    };
-  },
-  nuxtI18n: {
-    paths: {
-      it: '/ricettari/',
-      en: '/recipe-books/',
-    },
-  },
-};
+}
 </script>

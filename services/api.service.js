@@ -1,45 +1,44 @@
-// La nuova versione di getRecipeBookPage che usa le Promise
 import { GraphQLClient } from 'graphql-request'
 import 'cross-fetch/polyfill'
 
-// Funzione corretta per la pagina del ricettario
-function getRecipeBookPage(locale) {
-  const query = `
-    query RecipeBookPage($locale: SiteLocale) {
-      recipe_book(locale: $locale) {
-        title
-        heroBackground {
-          responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-            srcSet
-            webpSrcSet
-            sizes
-            src
-            width
-            height
-            alt
-            title
-            base64
-          }
+// =========================
+// Ricettari – nuova pagina
+// =========================
+const RICETTARI_QUERY = `
+  query RicettariPage($locale: SiteLocale) {
+    ricettari(locale: $locale) {
+      title
+      heroBackground {
+        responsiveImage(imgixParams: { auto: format, q: 80, fit: crop }) {
+          src
+          srcSet
+          sizes
+          width
+          height
+          alt
+          title
+          webpSrcSet
+          base64
         }
-        bottomImage {
-          responsiveImage(imgixParams: { fm: jpg, fit: crop, w: 2000, h: 1000 }) {
-            srcSet
-            webpSrcSet
-            sizes
-            src
-            width
-            height
-            alt
-            title
-            base64
-          }
-        }
+        alt
+      }
+      brevoForm
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
       }
     }
-  `
-  return request({ query, variables: { locale } })
+  }
+`
+
+export async function getRicettariPage(locale = 'it') {
+  const data = await request({
+    query: RICETTARI_QUERY,
+    variables: { locale },
+  })
+  return data?.ricettari ?? null
 }
-// import { Headers } from 'cross-fetch'
 
 // global.Headers = global.Headers || Headers
 
@@ -2185,7 +2184,7 @@ function getRecipeRatings(recipeId) {
 }
 
 export default {
-  getRecipeBookPage,
+  getRicettariPage,
   getCommon,
   getHeader,
   getHome,
