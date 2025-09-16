@@ -37,7 +37,7 @@ export async function getRicettariPage(locale = 'it') {
     query: RICETTARI_QUERY,
     variables: { locale },
   })
-  return data?.ricettari ?? null
+  return data && data.ricettari ? data.ricettari : null
 }
 
 // global.Headers = global.Headers || Headers
@@ -46,10 +46,15 @@ function request({ query, variables, preview }) {
   const endpoint = preview
     ? `https://graphql.datocms.com/preview`
     : `https://graphql.datocms.com/`
+  const token =
+    process.env.NUXT_ENV_CMS_DATOCMS_API_TOKEN || process.env.DATOCMS_API_TOKEN // fallback a variabile Netlify
+
   const client = new GraphQLClient(endpoint, {
     headers: {
-      authorization: `Bearer ${process.env.NUXT_ENV_CMS_DATOCMS_API_TOKEN}`,
-      'X-Environment': process.env.NUXT_ENV_DATOCMS_ENVIRONMENT,
+      authorization: `Bearer ${token}`,
+      ...(process.env.NUXT_ENV_DATOCMS_ENVIRONMENT && {
+        'X-Environment': process.env.NUXT_ENV_DATOCMS_ENVIRONMENT,
+      }),
     },
   })
   return client.request(query, variables)
