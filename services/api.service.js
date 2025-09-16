@@ -22,6 +22,11 @@ const RICETTARI_QUERY = `
         }
         alt
       }
+      # nuovi campi Body
+      titlebody
+      subtitlebody
+      textbody(markdown: false)
+
       brevoForm
       seo: _seoMetaTags {
         attributes
