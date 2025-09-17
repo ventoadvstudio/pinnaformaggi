@@ -22,21 +22,21 @@
     <!-- BODY -->
     <section class="container py-40">
       <h1
-        class="uppercase font-title font-medium text-primary md:text-40 text-center"
+        class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile"
       >
         {{ titlebody }}
       </h1>
 
       <h3
         v-if="subtitlebody"
-        class="modular-section__paragraph-title font-bold uppercase mb-7 text-cocoa-500 text-center md:text-22"
+        class="modular-section__paragraph-title font-bold uppercase mb-7 text-cocoa-500 text-center md:text-22 h3-mobile"
       >
         {{ subtitlebody }}
       </h3>
 
       <p
         v-if="textbody"
-        class="text-base leading-relaxed text-center text-gray-500"
+        class="text-base leading-relaxed text-center text-gray-500 p-mobile"
       >
         {{ textbody }}
       </p>
