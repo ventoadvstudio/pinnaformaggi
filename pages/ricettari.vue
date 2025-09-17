@@ -29,7 +29,7 @@
 
       <h3
         v-if="subtitlebody"
-        class="modular-section__paragraph-title font-bold uppercase mb-7 text-cocoa-500 text-center md:text-22 h3-mobile"
+        class="modular-section__paragraph-title font-bold uppercase mb-10 text-cocoa-500 text-center md:text-22 h3-mobile"
       >
         {{ subtitlebody }}
       </h3>
