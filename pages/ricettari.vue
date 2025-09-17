@@ -13,8 +13,7 @@
       <div
         class="relative z-20 container flex flex-col items-center justify-center text-center text-white"
       >
-        <!-- Se vuoi un solo H1 in pagina, valuta di NON usare <h1> qui -->
-        <p class="uppercase text-50 lg:text-80 font-heading">
+        <p class="uppercase text-50 lg:text-80 font-heading no-mobile">
           {{ title }}
         </p>
       </div>
