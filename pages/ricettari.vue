@@ -22,15 +22,23 @@
 
     <!-- BODY -->
     <section class="container py-40">
-      <h1 class="text-34 lg:text-48 font-heading mb-4">
+      <h1
+        class="uppercase font-title font-medium text-primary md:text-40 text-center"
+      >
         {{ titlebody }}
       </h1>
 
-      <h2 v-if="subtitlebody" class="text-24 lg:text-32 text-gray-700 mb-6">
+      <h3
+        v-if="subtitlebody"
+        class="modular-section__paragraph-title font-bold uppercase mb-7 text-cocoa-500 text-center md:text-22"
+      >
         {{ subtitlebody }}
-      </h2>
+      </h3>
 
-      <p v-if="textbody" class="text-base leading-relaxed">
+      <p
+        v-if="textbody"
+        class="text-base leading-relaxed text-center text-gray-500"
+      >
         {{ textbody }}
       </p>
     </section>
