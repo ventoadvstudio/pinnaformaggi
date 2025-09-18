@@ -37,6 +37,54 @@ const RICETTARI_QUERY = `
   }
 `
 
+// =========================
+// RicettariDownload – pagina "scarica-ricettari"
+// =========================
+const RICETTARI_DOWNLOAD_QUERY = `
+  query RicettariDownloadPage($locale: SiteLocale) {
+    ricettaridownload(locale: $locale) {   # se il campo non esiste, prova "ricettariDownload"
+      hero
+      heroBackground {
+        responsiveImage(imgixParams: { auto: format, q: 80, fit: crop }) {
+          src
+          srcSet
+          sizes
+          width
+          height
+          alt
+          title
+          webpSrcSet
+          base64
+        }
+        alt
+      }
+      titlebody
+      subtitlebody
+      textbody
+      gallery: mokupricettari {
+        __typename
+        ... on RicettariGalleryRecord {
+          htmlRicettari     # campo del block "Ricettari Gallery" (html_ricettari -> htmlRicettari)
+        }
+      }
+      seo: _seoMetaTags {
+        attributes
+        content
+        tag
+      }
+    }
+  }
+`
+
+export async function getRicettariDownloadPage(locale = 'it') {
+  const data = await request({
+    query: RICETTARI_DOWNLOAD_QUERY,
+    variables: { locale },
+  })
+  // niente optional chaining per compatibilità con Netlify
+  return data && data.ricettaridownload ? data.ricettaridownload : null
+}
+
 export async function getRicettariPage(locale = 'it') {
   const data = await request({
     query: RICETTARI_QUERY,
@@ -2194,6 +2242,7 @@ function getRecipeRatings(recipeId) {
 }
 
 export default {
+  getRicettariDownloadPage,
   getRicettariPage,
   getCommon,
   getHeader,
