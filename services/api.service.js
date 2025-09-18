@@ -42,7 +42,7 @@ const RICETTARI_QUERY = `
 // =========================
 const RICETTARI_DOWNLOAD_QUERY = `
   query RicettariDownloadPage($locale: SiteLocale) {
-    ricettaridownload(locale: $locale) {   # se il campo non esiste, prova "ricettariDownload"
+    ricettaridownload(locale: $locale) {
       hero
       heroBackground {
         responsiveImage(imgixParams: { auto: format, q: 80, fit: crop }) {
@@ -61,12 +61,13 @@ const RICETTARI_DOWNLOAD_QUERY = `
       titlebody
       subtitlebody
       textbody
-      gallery: mokupricettari {
-        __typename
-        ... on RicettariGalleryRecord {
-          htmlRicettari     # campo del block "Ricettari Gallery" (html_ricettari -> htmlRicettari)
-        }
-      }
+gallery: mokupricettari {
+  __typename
+  ... on RicettariGalleryRecord {
+    id
+    htmlRicettari
+  }
+}
       seo: _seoMetaTags {
         attributes
         content

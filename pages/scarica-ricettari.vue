@@ -42,11 +42,18 @@
       </p>
     </section>
 
-    <!-- GALLERIA DI BLOCCHI HTML -->
+    <!-- GALLERIA 3×3 -->
     <section v-if="gallery && gallery.length" class="container py-60">
-      <div v-for="(block, i) in gallery" :key="`gal-${i}`" class="mb-10">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="prose max-w-none" v-html="block.htmlRicettari"></div>
+      <!-- sicurezza: max 9 elementi (3x3) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <article
+          v-for="block in gallery.slice(0, 9)"
+          :key="block.id"
+          class="gallery-item rounded-2xl shadow-sm p-4 bg-white"
+        >
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div class="prose max-w-none" v-html="block.htmlRicettari"></div>
+        </article>
       </div>
     </section>
   </main>
@@ -68,13 +75,25 @@ export default {
         titlebody: data.titlebody || '',
         subtitlebody: data.subtitlebody || '',
         textbody: data.textbody || '',
-        gallery:
-          data.gallery && Array.isArray(data.gallery) ? data.gallery : [],
+        gallery: Array.isArray(data.gallery) ? data.gallery : [],
         seo: data.seo || [],
       }
     } catch (e) {
       error({ statusCode: 404, message: 'Pagina non trovata' })
     }
+  },
+
+  mounted() {
+    // Migliora UX dei contenuti HTML inseriti via DatoCMS
+    this.$nextTick(() => {
+      document.querySelectorAll('.gallery-item img').forEach((img) => {
+        img.setAttribute('loading', 'lazy')
+        img.setAttribute('decoding', 'async')
+      })
+      document.querySelectorAll('.gallery-item a').forEach((a) => {
+        if (!a.getAttribute('rel')) a.setAttribute('rel', 'noopener')
+      })
+    })
   },
 
   head() {
