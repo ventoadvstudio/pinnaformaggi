@@ -21,7 +21,9 @@
 
     <!-- BODY -->
     <section class="container py-40">
-      <h1 class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile">
+      <h1
+        class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile"
+      >
         {{ titlebody }}
       </h1>
 
@@ -32,18 +34,17 @@
         {{ subtitlebody }}
       </h3>
 
-      <p v-if="textbody" class="text-base leading-relaxed text-center text-gray-500 p-mobile">
+      <p
+        v-if="textbody"
+        class="text-base leading-relaxed text-center text-gray-500 p-mobile"
+      >
         {{ textbody }}
       </p>
     </section>
 
     <!-- GALLERIA DI BLOCCHI HTML -->
-    <section class="container py-60" v-if="gallery && gallery.length">
-      <div
-        v-for="(block, i) in gallery"
-        :key="`gal-${i}`"
-        class="mb-10"
-      >
+    <section v-if="gallery && gallery.length" class="container py-60">
+      <div v-for="(block, i) in gallery" :key="`gal-${i}`" class="mb-10">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="prose max-w-none" v-html="block.htmlRicettari"></div>
       </div>
@@ -52,14 +53,14 @@
 </template>
 
 <script>
-import { getRicettariDownloadPage } from '@/services/api.service';
+import { getRicettariDownloadPage } from '@/services/api.service'
 
 export default {
   async asyncData({ error }) {
     try {
-      const locale = 'it';
-      const data = await getRicettariDownloadPage(locale);
-      if (!data) throw new Error('RicettariDownload non trovato');
+      const locale = 'it'
+      const data = await getRicettariDownloadPage(locale)
+      if (!data) throw new Error('RicettariDownload non trovato')
 
       return {
         hero: data.hero || '',
@@ -67,11 +68,12 @@ export default {
         titlebody: data.titlebody || '',
         subtitlebody: data.subtitlebody || '',
         textbody: data.textbody || '',
-        gallery: (data.gallery && Array.isArray(data.gallery)) ? data.gallery : [],
-        seo: data.seo || []
-      };
+        gallery:
+          data.gallery && Array.isArray(data.gallery) ? data.gallery : [],
+        seo: data.seo || [],
+      }
     } catch (e) {
-      error({ statusCode: 404, message: 'Pagina non trovata' });
+      error({ statusCode: 404, message: 'Pagina non trovata' })
     }
   },
 
@@ -80,21 +82,23 @@ export default {
       ? this.seo
           .filter((t) => t.tag === 'meta')
           .map((t) => ({
-            hid: (t.attributes && (t.attributes.name || t.attributes.property)) || undefined,
-            ...t.attributes
+            hid:
+              (t.attributes && (t.attributes.name || t.attributes.property)) ||
+              undefined,
+            ...t.attributes,
           }))
-      : [];
+      : []
     const linksFromDato = Array.isArray(this.seo)
       ? this.seo
           .filter((t) => t.tag === 'link')
           .map((t) => ({ ...t.attributes }))
-      : [];
+      : []
 
     return {
       title: this.titlebody || this.hero || 'Scarica ricettari',
       meta: metaFromDato,
-      link: linksFromDato
-    };
-  }
-};
+      link: linksFromDato,
+    }
+  },
+}
 </script>
