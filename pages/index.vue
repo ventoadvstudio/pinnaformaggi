@@ -53,6 +53,8 @@ import ApiService from '@/services/api.service'
 import { handleSlug, handleAltText } from '@/utils'
 import BasePage from '@/components/BasePage'
 
+const safeImg = (img) => (img ? handleAltText(img) : '')
+
 export default {
   name: 'Index',
   components: {
@@ -64,123 +66,140 @@ export default {
   },
   extends: BasePage,
 
-  async asyncData({ app, store, error }) {
+  async asyncData({ app, store }) {
+    const locale = app.i18n.locale
+    let homepage = null
+
+    // 1) Proviamo a leggere i dati, senza mai lanciare errori
     try {
-      const locale = app.i18n.locale
-      const { homepage } = await ApiService.getHome(locale)
+      const res = await ApiService.getHome(locale)
+      homepage = res && res.homepage ? res.homepage : null
+    } catch (_) {
+      homepage = null
+    }
 
-      // Fallback “safe” se qualche campo manca
-      const images = homepage && homepage.images ? homepage.images : []
-      const heroButtons =
-        homepage && homepage.heroButtons ? homepage.heroButtons : []
-      const featuredLines =
-        homepage && homepage.featuredLines ? homepage.featuredLines : []
-      const featuredRecipes =
-        homepage && homepage.featuredRecipes
-          ? homepage.featuredRecipes
-          : { items: [] }
-      const featuredProducts =
-        homepage && homepage.featuredProducts
-          ? homepage.featuredProducts
-          : { items: [] }
+    // 2) Fallback “safe” su tutti i campi
+    const images =
+      homepage && homepage.images ? homepage.images.map(safeImg) : []
+    const heroButtons =
+      homepage && homepage.heroButtons ? homepage.heroButtons : []
+    const featuredLines =
+      homepage && homepage.featuredLines ? homepage.featuredLines : []
+    const featuredRecipes =
+      homepage && homepage.featuredRecipes
+        ? homepage.featuredRecipes
+        : { title: '', description: '', items: [] }
+    const featuredProducts =
+      homepage && homepage.featuredProducts
+        ? homepage.featuredProducts
+        : { title: '', description: '', items: [] }
 
-      return {
-        seo: homepage ? homepage.seo : null,
+    const hero = {
+      titleSmall: homepage ? homepage.titleSmall : '',
+      titleLarge: homepage ? homepage.titleLarge : '',
+      subTitle: homepage ? homepage.subtitle : '',
+      description: homepage ? homepage.description : '',
+      discoverMore: homepage ? homepage.discoverMore : '',
+      images,
+      imagesTimeout:
+        homepage && homepage.imagesTimeout ? homepage.imagesTimeout : 5000,
+      buttons: [
+        heroButtons[0]
+          ? {
+              label: heroButtons[0].label || '',
+              to: handleSlug(locale, 'subHomeProducts'),
+              background: safeImg(heroButtons[0].background),
+            }
+          : null,
+        heroButtons[1]
+          ? {
+              label: heroButtons[1].label || '',
+              to: handleSlug(locale, 'subHomeRecipes'),
+              background: safeImg(heroButtons[1].background),
+            }
+          : null,
+      ].filter(Boolean),
+    }
 
-        hero: {
-          titleSmall: homepage ? homepage.titleSmall : '',
-          titleLarge: homepage ? homepage.titleLarge : '',
-          subTitle: homepage ? homepage.subtitle : '',
-          description: homepage ? homepage.description : '',
-          discoverMore: homepage ? homepage.discoverMore : '',
-          images: images.map((img) => handleAltText(img)),
-          imagesTimeout: homepage ? homepage.imagesTimeout : 5000,
-          buttons: [
-            heroButtons[0]
-              ? {
-                  label: heroButtons[0].label,
-                  to: handleSlug(locale, 'subHomeProducts'),
-                  background: handleAltText(heroButtons[0].background),
-                }
-              : null,
-            heroButtons[1]
-              ? {
-                  label: heroButtons[1].label,
-                  to: handleSlug(locale, 'subHomeRecipes'),
-                  background: handleAltText(heroButtons[1].background),
-                }
-              : null,
-          ].filter(Boolean),
-        },
+    const overlay = [
+      {
+        label: homepage ? homepage.overlayProductsLabel || '' : '',
+        to: handleSlug(locale, 'subHomeProducts'),
+      },
+      {
+        label: homepage ? homepage.overlayRecipesLabel || '' : '',
+        to: handleSlug(locale, 'subHomeRecipes'),
+      },
+    ]
 
-        overlay: [
-          {
-            label: homepage ? homepage.overlayProductsLabel : '',
-            to: handleSlug(locale, 'subHomeProducts'),
-          },
-          {
-            label: homepage ? homepage.overlayRecipesLabel : '',
-            to: handleSlug(locale, 'subHomeRecipes'),
-          },
-        ],
+    const posters = featuredLines.map((entry, index) => ({
+      topImg: safeImg(entry.imagePrimary),
+      title: entry.title || '',
+      description: entry.description || '',
+      bottomImg: safeImg(entry.imageSecondary), // <-- invariato
+      buttonLabel: entry.ctaLabel || '', // <-- invariato
+      url: handleSlug(
+        locale,
+        'lineLanding',
+        entry.link && entry.link.slug ? entry.link.slug : ''
+      ),
+      color: index === 0 ? 'cream' : 'green',
+    }))
 
-        // Lasciamo la logica invariata (come prima), con fallback difensivi
-        posters: featuredLines.map((entry, index) => ({
-          topImg: handleAltText(entry.imagePrimary),
-          title: entry.title,
-          description: entry.description,
-          bottomImg: handleAltText(entry.imageSecondary),
-          buttonLabel: entry.ctaLabel,
-          // in DatoCMS questo link è la landing della linea (come in origine)
-          url: handleSlug(
-            locale,
-            'lineLanding',
-            entry.link ? entry.link.slug : ''
-          ),
-          color: index === 0 ? 'cream' : 'green',
-        })),
+    const recipesSlider = {
+      title: featuredRecipes.title || '',
+      description: featuredRecipes.description || '',
+      items: (featuredRecipes.items || []).map((item) => ({
+        title: item.name || '',
+        image: safeImg(item.picture),
+        ctaLabel:
+          (store &&
+            store.state &&
+            store.state.common &&
+            store.state.common[locale] &&
+            store.state.common[locale].visitRecipeLabel) ||
+          '',
+        ctaUrl: handleSlug(locale, 'recipe', item.slug || ''),
+      })),
+    }
 
-        recipesSlider: {
-          title: featuredRecipes.title || '',
-          description: featuredRecipes.description || '',
-          items: (featuredRecipes.items || []).map((item) => ({
-            title: item.name,
-            image: handleAltText(item.picture),
-            ctaLabel: store.state.common[locale].visitRecipeLabel,
-            ctaUrl: handleSlug(locale, 'recipe', item.slug),
-          })),
-        },
+    const aboutUs = {
+      title: (homepage && homepage.aboutUsTitle) || '',
+      description: (homepage && homepage.aboutUsDescription) || '',
+      image: safeImg(homepage && homepage.aboutUsBackgroundImage),
+      ctaLabel: (homepage && homepage.aboutUsCtaLabel) || '',
+      ctaUrl: handleSlug(locale, 'values'),
+    }
 
-        aboutUs: {
-          title: homepage ? homepage.aboutUsTitle : '',
-          description: homepage ? homepage.aboutUsDescription : '',
-          image: handleAltText(
-            homepage ? homepage.aboutUsBackgroundImage : null
-          ),
-          ctaLabel: homepage ? homepage.aboutUsCtaLabel : '',
-          ctaUrl: handleSlug(locale, 'values'),
-        },
+    const productsSlider = {
+      title: featuredProducts.title || '',
+      description: featuredProducts.description || '',
+      items: (featuredProducts.items || []).map((item) => ({
+        title: item.name || '',
+        image:
+          item && item.pictures && item.pictures[0] && item.pictures[0].image
+            ? safeImg(item.pictures[0].image)
+            : '',
+        ctaLabel:
+          (store &&
+            store.state &&
+            store.state.common &&
+            store.state.common[locale] &&
+            store.state.common[locale].visitProductLabel) ||
+          '',
+        ctaUrl: handleSlug(locale, 'product', (item && item.slug) || ''),
+      })),
+    }
 
-        productsSlider: {
-          title: featuredProducts.title || '',
-          description: featuredProducts.description || '',
-          items: (featuredProducts.items || []).map((item) => ({
-            title: item.name,
-            image:
-              item.pictures && item.pictures.length
-                ? handleAltText(item.pictures[0].image)
-                : '',
-            ctaLabel: store.state.common[locale].visitProductLabel,
-            ctaUrl: handleSlug(locale, 'product', item.slug),
-          })),
-        },
-      }
-    } catch (e) {
-      // se qualcosa va storto evitiamo di stampare query in pagina
-      error({
-        statusCode: 500,
-        message: 'Errore nel caricamento della homepage',
-      })
+    // 3) Niente error(): in fallback la pagina si genera comunque
+    return {
+      seo: (homepage && homepage.seo) || null,
+      hero,
+      overlay,
+      posters,
+      recipesSlider,
+      aboutUs,
+      productsSlider,
     }
   },
 
