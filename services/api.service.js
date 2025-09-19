@@ -311,22 +311,46 @@ function getHome(locale) {
         }
         overlayProductsLabel
         overlayRecipesLabel
-        featuredLines {
-          title
-          description
-          imagePrimary {
-            url
-            alt
-            filename
-            responsiveImage(imgixParams: {w: 600, fit: crop, auto: format}) {
-              src
-              srcSet
-              width
-              height
-              alt
-              title
-            }
-          }
+featuredLines {
+  title
+  description
+  imagePrimary { 
+    url
+    alt
+    filename
+    responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
+      src
+      srcSet
+      width
+      height
+      alt
+      title
+    }
+  }
+  imageSecondary {
+    url
+    alt
+    filename
+    responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
+      src
+      srcSet
+      width
+      height
+      alt
+      title
+    }
+  }
+  ctaLabel
+  link {
+    ... on ProductLineLandingRecord { id _modelApiKey slug }
+    ... on ProductLineRecord        { id _modelApiKey slug }
+    ... on LinesPageRecord          { id _modelApiKey }
+    ... on OriginsPageRecord        { id _modelApiKey }
+    ... on AgingsPageRecord         { id _modelApiKey }
+    ... on ProductsPageRecord       { id _modelApiKey }
+  }
+}
+
           imageSecondary {
             url
             alt
