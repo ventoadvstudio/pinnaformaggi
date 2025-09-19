@@ -4,12 +4,12 @@
     <div class="relative pb-100 pt-110 md:pb-140 lg:pt-180 lg:pb-420">
       <datocms-image
         v-if="heroBackground && heroBackground.responsiveImage"
-        class="absolute inset-0 w-full h-full object-cover object-top md:object-center"
+        class="absolute inset-0 object-cover w-full h-full"
         :data="heroBackground.responsiveImage"
         :alt="heroBackground.alt || ''"
         layout="fill"
+        object-fit="cover"
       />
-
       <div
         class="relative z-20 container flex flex-col items-center justify-center text-center text-white"
       >
