@@ -53,8 +53,6 @@ import ApiService from '@/services/api.service'
 import { handleSlug, handleAltText } from '@/utils'
 import BasePage from '@/components/BasePage'
 
-const safeImg = (img) => (img ? handleAltText(img) : '')
-
 export default {
   name: 'Index',
   components: {
@@ -66,140 +64,158 @@ export default {
   },
   extends: BasePage,
 
-  async asyncData({ app, store }) {
-    const locale = app.i18n.locale
-    let homepage = null
-
-    // 1) Proviamo a leggere i dati, senza mai lanciare errori
+  async asyncData({ app, store, error }) {
     try {
+      const locale = app.i18n.locale
       const res = await ApiService.getHome(locale)
-      homepage = res && res.homepage ? res.homepage : null
-    } catch (_) {
-      homepage = null
-    }
+      const homepage = res && res.homepage ? res.homepage : null
+      if (!homepage) {
+        throw new Error('Homepage non trovata')
+      }
 
-    // 2) Fallback “safe” su tutti i campi
-    const images =
-      homepage && homepage.images ? homepage.images.map(safeImg) : []
-    const heroButtons =
-      homepage && homepage.heroButtons ? homepage.heroButtons : []
-    const featuredLines =
-      homepage && homepage.featuredLines ? homepage.featuredLines : []
-    const featuredRecipes =
-      homepage && homepage.featuredRecipes
-        ? homepage.featuredRecipes
-        : { title: '', description: '', items: [] }
-    const featuredProducts =
-      homepage && homepage.featuredProducts
-        ? homepage.featuredProducts
-        : { title: '', description: '', items: [] }
+      // helper lato pagina: restituisce sempre stringa/oggetto valido
+      const safeImg = (img) => (img ? handleAltText(img) : '')
 
-    const hero = {
-      titleSmall: homepage ? homepage.titleSmall : '',
-      titleLarge: homepage ? homepage.titleLarge : '',
-      subTitle: homepage ? homepage.subtitle : '',
-      description: homepage ? homepage.description : '',
-      discoverMore: homepage ? homepage.discoverMore : '',
-      images,
-      imagesTimeout:
-        homepage && homepage.imagesTimeout ? homepage.imagesTimeout : 5000,
-      buttons: [
-        heroButtons[0]
-          ? {
-              label: heroButtons[0].label || '',
-              to: handleSlug(locale, 'subHomeProducts'),
-              background: safeImg(heroButtons[0].background),
-            }
-          : null,
-        heroButtons[1]
-          ? {
-              label: heroButtons[1].label || '',
-              to: handleSlug(locale, 'subHomeRecipes'),
-              background: safeImg(heroButtons[1].background),
-            }
-          : null,
-      ].filter(Boolean),
-    }
+      // Etichette comuni senza optional chaining
+      const commonDict =
+        store && store.state && store.state.common && store.state.common[locale]
+          ? store.state.common[locale]
+          : {}
 
-    const overlay = [
-      {
-        label: homepage ? homepage.overlayProductsLabel || '' : '',
-        to: handleSlug(locale, 'subHomeProducts'),
-      },
-      {
-        label: homepage ? homepage.overlayRecipesLabel || '' : '',
-        to: handleSlug(locale, 'subHomeRecipes'),
-      },
-    ]
+      // --- HERO -------------------------------------------------------------
+      const images = Array.isArray(homepage.images)
+        ? homepage.images.map(safeImg)
+        : []
 
-    const posters = featuredLines.map((entry, index) => ({
-      topImg: safeImg(entry.imagePrimary),
-      title: entry.title || '',
-      description: entry.description || '',
-      bottomImg: safeImg(entry.imageSecondary), // <-- invariato
-      buttonLabel: entry.ctaLabel || '', // <-- invariato
-      url: handleSlug(
-        locale,
-        'lineLanding',
-        entry.link && entry.link.slug ? entry.link.slug : ''
-      ),
-      color: index === 0 ? 'cream' : 'green',
-    }))
+      const heroButtonsSrc = Array.isArray(homepage.heroButtons)
+        ? homepage.heroButtons
+        : []
 
-    const recipesSlider = {
-      title: featuredRecipes.title || '',
-      description: featuredRecipes.description || '',
-      items: (featuredRecipes.items || []).map((item) => ({
-        title: item.name || '',
-        image: safeImg(item.picture),
-        ctaLabel:
-          (store &&
-            store.state &&
-            store.state.common &&
-            store.state.common[locale] &&
-            store.state.common[locale].visitRecipeLabel) ||
-          '',
-        ctaUrl: handleSlug(locale, 'recipe', item.slug || ''),
-      })),
-    }
+      const btn0src = heroButtonsSrc[0] || {}
+      const btn1src = heroButtonsSrc[1] || {}
 
-    const aboutUs = {
-      title: (homepage && homepage.aboutUsTitle) || '',
-      description: (homepage && homepage.aboutUsDescription) || '',
-      image: safeImg(homepage && homepage.aboutUsBackgroundImage),
-      ctaLabel: (homepage && homepage.aboutUsCtaLabel) || '',
-      ctaUrl: handleSlug(locale, 'values'),
-    }
+      const hero = {
+        titleSmall: homepage.titleSmall || '',
+        titleLarge: homepage.titleLarge || '',
+        subTitle: homepage.subtitle || '',
+        description: homepage.description || '',
+        discoverMore: homepage.discoverMore || '',
+        images,
+        imagesTimeout: homepage.imagesTimeout || 5000,
+        // IMPORTANTISSIMO: forniamo SEMPRE due oggetti, mai undefined
+        buttons: [
+          {
+            label: btn0src.label || '',
+            to: handleSlug(locale, 'subHomeProducts'),
+            background: safeImg(btn0src.background),
+          },
+          {
+            label: btn1src.label || '',
+            to: handleSlug(locale, 'subHomeRecipes'),
+            background: safeImg(btn1src.background),
+          },
+        ],
+      }
 
-    const productsSlider = {
-      title: featuredProducts.title || '',
-      description: featuredProducts.description || '',
-      items: (featuredProducts.items || []).map((item) => ({
-        title: item.name || '',
-        image:
-          item && item.pictures && item.pictures[0] && item.pictures[0].image
-            ? safeImg(item.pictures[0].image)
-            : '',
-        ctaLabel:
-          (store &&
-            store.state &&
-            store.state.common &&
-            store.state.common[locale] &&
-            store.state.common[locale].visitProductLabel) ||
-          '',
-        ctaUrl: handleSlug(locale, 'product', (item && item.slug) || ''),
-      })),
-    }
+      // --- OVERLAY ----------------------------------------------------------
+      const overlay = [
+        {
+          label: homepage.overlayProductsLabel || '',
+          to: handleSlug(locale, 'subHomeProducts'),
+        },
+        {
+          label: homepage.overlayRecipesLabel || '',
+          to: handleSlug(locale, 'subHomeRecipes'),
+        },
+      ]
 
-    // 3) Niente error(): in fallback la pagina si genera comunque
-    return {
-      seo: (homepage && homepage.seo) || null,
-      hero,
-      overlay,
-      posters,
-      recipesSlider,
-      aboutUs,
-      productsSlider,
+      // --- POSTERS (featuredLines) -----------------------------------------
+      const posters = Array.isArray(homepage.featuredLines)
+        ? homepage.featuredLines.map((entry, index) => ({
+            topImg: safeImg(entry && entry.imagePrimary),
+            title: (entry && entry.title) || '',
+            description: (entry && entry.description) || '',
+            bottomImg: safeImg(entry && entry.imageSecondary),
+            buttonLabel: (entry && entry.ctaLabel) || '',
+            // la query di getHome espone link { slug } per la landing
+            url: handleSlug(
+              locale,
+              'lineLanding',
+              entry && entry.link ? entry.link.slug : ''
+            ),
+            color: index === 0 ? 'cream' : 'green',
+          }))
+        : []
+
+      // --- RECIPES SLIDER ---------------------------------------------------
+      const recipesBlock = homepage.featuredRecipes || {}
+      const recipesSlider = {
+        title: recipesBlock.title || '',
+        description: recipesBlock.description || '',
+        items: Array.isArray(recipesBlock.items)
+          ? recipesBlock.items.map((item) => ({
+              title: (item && item.name) || '',
+              image: safeImg(item && item.picture),
+              ctaLabel: commonDict.visitRecipeLabel || '',
+              ctaUrl: handleSlug(
+                locale,
+                'recipe',
+                item && item.slug ? item.slug : ''
+              ),
+            }))
+          : [],
+      }
+
+      // --- IMAGE SECTION (About Us) ----------------------------------------
+      const aboutUs = {
+        title: homepage.aboutUsTitle || '',
+        description: homepage.aboutUsDescription || '',
+        image: safeImg(homepage.aboutUsBackgroundImage),
+        ctaLabel: homepage.aboutUsCtaLabel || '',
+        ctaUrl: handleSlug(locale, 'values'),
+      }
+
+      // --- PRODUCTS SLIDER --------------------------------------------------
+      const productsBlock = homepage.featuredProducts || {}
+      const productsSlider = {
+        title: productsBlock.title || '',
+        description: productsBlock.description || '',
+        items: Array.isArray(productsBlock.items)
+          ? productsBlock.items.map((item) => ({
+              title: (item && item.name) || '',
+              image:
+                item &&
+                item.pictures &&
+                item.pictures.length &&
+                item.pictures[0] &&
+                item.pictures[0].image
+                  ? safeImg(item.pictures[0].image)
+                  : '',
+              ctaLabel: commonDict.visitProductLabel || '',
+              ctaUrl: handleSlug(
+                locale,
+                'product',
+                item && item.slug ? item.slug : ''
+              ),
+            }))
+          : [],
+      }
+
+      return {
+        seo: homepage.seo,
+        hero,
+        overlay,
+        posters,
+        recipesSlider,
+        aboutUs,
+        productsSlider,
+      }
+    } catch (e) {
+      // messaggio chiaro per nuxt generate / netlify
+      error({
+        statusCode: 500,
+        message: 'Errore nel caricamento della homepage',
+      })
     }
   },
 
