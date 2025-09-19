@@ -64,12 +64,6 @@
 
 }
 
-.sib-form {
-    position: relative;
-    z-index: 1;
-    margin-top: -120px;
-}
-
 .p-mobile {
     position: relative;
     z-index: 10;

@@ -14,12 +14,12 @@
         class="relative z-20 container flex flex-col items-center justify-center text-center text-white"
       >
         <p class="uppercase text-50 lg:text-80 font-heading no-mobile">
-          {{ hero }}
+          {{ hero || title || 'Ricettari' }}
         </p>
       </div>
     </div>
 
-    <!-- BODY -->
+    <!-- BODY (titoli) -->
     <section class="container py-40">
       <h1
         class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile"
@@ -27,12 +27,12 @@
         {{ titlebody }}
       </h1>
 
-      <h3
+      <h2
         v-if="subtitlebody"
-        class="modular-section__paragraph-title font-bold uppercase mb-10 text-cocoa-500 text-center md:text-22 h3-mobile"
+        class="modular-section__paragraph-title font-bold uppercase mb-10 text-cocoa-500 text-center md:text-22 h2-mobile"
       >
         {{ subtitlebody }}
-      </h3>
+      </h2>
 
       <p
         v-if="textbody"
@@ -42,17 +42,22 @@
       </p>
     </section>
 
-    <!-- GALLERIA 3×3 -->
-    <section v-if="gallery && gallery.length" class="container py-60">
-      <!-- sicurezza: max 9 elementi (3x3) -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- GALLERY: xs=1 col, sm=2 col, lg=3 col -->
+    <section class="container pb-60">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+      >
         <article
-          v-for="block in gallery.slice(0, 9)"
-          :key="block.id"
-          class="gallery-item rounded-2xl shadow-sm p-4 bg-white"
+          v-for="(block, idx) in gallery"
+          :key="block.id || idx"
+          class="rounded-2xl overflow-hidden bg-white shadow-md"
         >
+          <!-- Il contenuto arriva da DatoCMS come HTML controllato -->
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div class="prose max-w-none" v-html="block.htmlRicettari"></div>
+          <div
+            class="prose max-w-none ricettari-card"
+            v-html="block.htmlRicettari"
+          ></div>
         </article>
       </div>
     </section>
@@ -67,33 +72,25 @@ export default {
     try {
       const locale = 'it'
       const data = await getRicettariDownloadPage(locale)
-      if (!data) throw new Error('RicettariDownload non trovato')
+      if (!data) throw new Error('Ricettari download non trovato')
 
       return {
+        // hero
         hero: data.hero || '',
         heroBackground: data.heroBackground || null,
+        // body
         titlebody: data.titlebody || '',
         subtitlebody: data.subtitlebody || '',
         textbody: data.textbody || '',
+        // gallery di blocchi html
         gallery: Array.isArray(data.gallery) ? data.gallery : [],
+        // seo
         seo: data.seo || [],
+        title: 'Ricettari',
       }
     } catch (e) {
       error({ statusCode: 404, message: 'Pagina non trovata' })
     }
-  },
-
-  mounted() {
-    // Migliora UX dei contenuti HTML inseriti via DatoCMS
-    this.$nextTick(() => {
-      document.querySelectorAll('.gallery-item img').forEach((img) => {
-        img.setAttribute('loading', 'lazy')
-        img.setAttribute('decoding', 'async')
-      })
-      document.querySelectorAll('.gallery-item a').forEach((a) => {
-        if (!a.getAttribute('rel')) a.setAttribute('rel', 'noopener')
-      })
-    })
   },
 
   head() {
@@ -114,10 +111,24 @@ export default {
       : []
 
     return {
-      title: this.titlebody || this.hero || 'Scarica ricettari',
+      title: this.titlebody || this.hero || this.title || 'Ricettari',
       meta: metaFromDato,
       link: linksFromDato,
     }
   },
 }
 </script>
+
+<style scoped>
+/* Rende i blocchi HTML della gallery più coerenti nella card */
+.ricettari-card a {
+  display: block;
+  text-decoration: none;
+}
+.ricettari-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+</style>
