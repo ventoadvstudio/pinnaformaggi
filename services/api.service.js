@@ -285,7 +285,7 @@ function getHome(locale) {
           url
           alt
           filename
-          responsiveImage(imgixParams: {w: 1920, fit: crop, auto: format}) {
+          responsiveImage(imgixParams: { w: 1920, fit: crop, auto: format }) {
             srcSet
             src
             width
@@ -299,7 +299,7 @@ function getHome(locale) {
             url
             alt
             filename
-            responsiveImage(imgixParams: {w: 200, fit: crop, auto: format}) {
+            responsiveImage(imgixParams: { w: 200, fit: crop, auto: format }) {
               src
               srcSet
               width
@@ -311,51 +311,28 @@ function getHome(locale) {
         }
         overlayProductsLabel
         overlayRecipesLabel
-featuredLines {
-  title
-  description
-  imagePrimary { 
-    url
-    alt
-    filename
-    responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
-      src
-      srcSet
-      width
-      height
-      alt
-      title
-    }
-  }
-  imageSecondary {
-    url
-    alt
-    filename
-    responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
-      src
-      srcSet
-      width
-      height
-      alt
-      title
-    }
-  }
-  ctaLabel
-  link {
-    ... on ProductLineLandingRecord { id _modelApiKey slug }
-    ... on ProductLineRecord        { id _modelApiKey slug }
-    ... on LinesPageRecord          { id _modelApiKey }
-    ... on OriginsPageRecord        { id _modelApiKey }
-    ... on AgingsPageRecord         { id _modelApiKey }
-    ... on ProductsPageRecord       { id _modelApiKey }
-  }
-}
 
+        featuredLines {
+          title
+          description
+          imagePrimary {
+            url
+            alt
+            filename
+            responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
+              src
+              srcSet
+              width
+              height
+              alt
+              title
+            }
+          }
           imageSecondary {
             url
             alt
             filename
-            responsiveImage(imgixParams: {w: 600, fit: crop, auto: format}) {
+            responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
               src
               srcSet
               width
@@ -365,10 +342,9 @@ featuredLines {
             }
           }
           ctaLabel
-          link {
-            slug
-          }
+          link { slug }
         }
+
         featuredRecipes {
           title
           description
@@ -381,7 +357,7 @@ featuredLines {
                 url
                 alt
                 filename
-                responsiveImage(imgixParams: {w: 600, fit: crop}) {
+                responsiveImage(imgixParams: { w: 600, fit: crop }) {
                   srcSet
                   src
                 }
@@ -389,6 +365,7 @@ featuredLines {
             }
           }
         }
+
         aboutUsTitle
         aboutUsDescription(markdown: false)
         aboutUsCtaLabel
@@ -397,6 +374,7 @@ featuredLines {
           alt
           filename
         }
+
         featuredProducts {
           title
           description
@@ -410,7 +388,7 @@ featuredLines {
                   url
                   alt
                   filename
-                  responsiveImage(imgixParams: {w: 600, fit: crop}) {
+                  responsiveImage(imgixParams: { w: 600, fit: crop }) {
                     srcSet
                     src
                   }
@@ -419,15 +397,12 @@ featuredLines {
             }
           }
         }
+
         seo {
           description
           title
           twitterCard
-          image {
-            url
-            alt
-            filename
-          }
+          image { url alt filename }
         }
       }
     }
