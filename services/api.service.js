@@ -285,7 +285,7 @@ function getHome(locale) {
           url
           alt
           filename
-          responsiveImage(imgixParams: { w: 1920, fit: crop, auto: format }) {
+          responsiveImage(imgixParams: {w: 1920, fit: crop, auto: format}) {
             srcSet
             src
             width
@@ -299,7 +299,7 @@ function getHome(locale) {
             url
             alt
             filename
-            responsiveImage(imgixParams: { w: 200, fit: crop, auto: format }) {
+            responsiveImage(imgixParams: {w: 200, fit: crop, auto: format}) {
               src
               srcSet
               width
@@ -311,7 +311,6 @@ function getHome(locale) {
         }
         overlayProductsLabel
         overlayRecipesLabel
-
         featuredLines {
           title
           description
@@ -319,7 +318,7 @@ function getHome(locale) {
             url
             alt
             filename
-            responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
+            responsiveImage(imgixParams: {w: 600, fit: crop, auto: format}) {
               src
               srcSet
               width
@@ -332,7 +331,7 @@ function getHome(locale) {
             url
             alt
             filename
-            responsiveImage(imgixParams: { w: 600, fit: crop, auto: format }) {
+            responsiveImage(imgixParams: {w: 600, fit: crop, auto: format}) {
               src
               srcSet
               width
@@ -342,9 +341,10 @@ function getHome(locale) {
             }
           }
           ctaLabel
-          link { slug }
+          link {
+            slug
+          }
         }
-
         featuredRecipes {
           title
           description
@@ -357,7 +357,7 @@ function getHome(locale) {
                 url
                 alt
                 filename
-                responsiveImage(imgixParams: { w: 600, fit: crop }) {
+                responsiveImage(imgixParams: {w: 600, fit: crop}) {
                   srcSet
                   src
                 }
@@ -365,7 +365,6 @@ function getHome(locale) {
             }
           }
         }
-
         aboutUsTitle
         aboutUsDescription(markdown: false)
         aboutUsCtaLabel
@@ -374,7 +373,6 @@ function getHome(locale) {
           alt
           filename
         }
-
         featuredProducts {
           title
           description
@@ -388,7 +386,7 @@ function getHome(locale) {
                   url
                   alt
                   filename
-                  responsiveImage(imgixParams: { w: 600, fit: crop }) {
+                  responsiveImage(imgixParams: {w: 600, fit: crop}) {
                     srcSet
                     src
                   }
@@ -397,12 +395,15 @@ function getHome(locale) {
             }
           }
         }
-
         seo {
           description
           title
           twitterCard
-          image { url alt filename }
+          image {
+            url
+            alt
+            filename
+          }
         }
       }
     }

@@ -12,9 +12,7 @@
       :discover-more="hero.discoverMore"
       next-section-id="posters"
     />
-
     <Posters id="posters" :items="posters" />
-
     <Slider
       :title="recipesSlider.title"
       :description="recipesSlider.description"
@@ -23,7 +21,6 @@
       :initial-slide="3"
       cover
     />
-
     <ImageSection
       :title="aboutUs.title"
       :description="aboutUs.description"
@@ -31,14 +28,12 @@
       :cta-label="aboutUs.ctaLabel"
       :cta-url="aboutUs.ctaUrl"
     />
-
     <Slider
       :title="productsSlider.title"
       :description="productsSlider.description"
       :items="productsSlider.items"
       :items-per-group="3"
     />
-
     <CtaOverlay :buttons="overlay" />
   </main>
 </template>
@@ -63,162 +58,83 @@ export default {
     CtaOverlay,
   },
   extends: BasePage,
-
-  async asyncData({ app, store, error }) {
-    try {
-      const locale = app.i18n.locale
-      const res = await ApiService.getHome(locale)
-      const homepage = res && res.homepage ? res.homepage : null
-      if (!homepage) {
-        throw new Error('Homepage non trovata')
-      }
-
-      // helper lato pagina: restituisce sempre stringa/oggetto valido
-      const safeImg = (img) => (img ? handleAltText(img) : '')
-
-      // Etichette comuni senza optional chaining
-      const commonDict =
-        store && store.state && store.state.common && store.state.common[locale]
-          ? store.state.common[locale]
-          : {}
-
-      // --- HERO -------------------------------------------------------------
-      const images = Array.isArray(homepage.images)
-        ? homepage.images.map(safeImg)
-        : []
-
-      const heroButtonsSrc = Array.isArray(homepage.heroButtons)
-        ? homepage.heroButtons
-        : []
-
-      const btn0src = heroButtonsSrc[0] || {}
-      const btn1src = heroButtonsSrc[1] || {}
-
-      const hero = {
-        titleSmall: homepage.titleSmall || '',
-        titleLarge: homepage.titleLarge || '',
-        subTitle: homepage.subtitle || '',
-        description: homepage.description || '',
-        discoverMore: homepage.discoverMore || '',
-        images,
-        imagesTimeout: homepage.imagesTimeout || 5000,
-        // IMPORTANTISSIMO: forniamo SEMPRE due oggetti, mai undefined
+  async asyncData({ app, store }) {
+    const locale = app.i18n.locale
+    const { homepage } = await ApiService.getHome(locale)
+    return {
+      seo: homepage.seo,
+      hero: {
+        titleSmall: homepage.titleSmall,
+        titleLarge: homepage.titleLarge,
+        subTitle: homepage.subtitle,
+        description: homepage.description,
+        discoverMore: homepage.discoverMore,
+        images: homepage.images.map((image) => handleAltText(image)),
+        imagesTimeout: homepage.imagesTimeout,
         buttons: [
           {
-            label: btn0src.label || '',
+            label: homepage.heroButtons[0].label,
             to: handleSlug(locale, 'subHomeProducts'),
-            background: safeImg(btn0src.background),
+            background: handleAltText(homepage.heroButtons[0].background),
           },
           {
-            label: btn1src.label || '',
+            label: homepage.heroButtons[1].label,
             to: handleSlug(locale, 'subHomeRecipes'),
-            background: safeImg(btn1src.background),
+            background: handleAltText(homepage.heroButtons[1].background),
           },
         ],
-      }
-
-      // --- OVERLAY ----------------------------------------------------------
-      const overlay = [
+      },
+      overlay: [
         {
-          label: homepage.overlayProductsLabel || '',
+          label: homepage.overlayProductsLabel,
           to: handleSlug(locale, 'subHomeProducts'),
         },
         {
-          label: homepage.overlayRecipesLabel || '',
+          label: homepage.overlayRecipesLabel,
           to: handleSlug(locale, 'subHomeRecipes'),
         },
-      ]
-
-      // --- POSTERS (featuredLines) -----------------------------------------
-      const posters = Array.isArray(homepage.featuredLines)
-        ? homepage.featuredLines.map((entry, index) => ({
-            topImg: safeImg(entry && entry.imagePrimary),
-            title: (entry && entry.title) || '',
-            description: (entry && entry.description) || '',
-            bottomImg: safeImg(entry && entry.imageSecondary),
-            buttonLabel: (entry && entry.ctaLabel) || '',
-            // la query di getHome espone link { slug } per la landing
-            url: handleSlug(
-              locale,
-              'lineLanding',
-              entry && entry.link ? entry.link.slug : ''
-            ),
-            color: index === 0 ? 'cream' : 'green',
-          }))
-        : []
-
-      // --- RECIPES SLIDER ---------------------------------------------------
-      const recipesBlock = homepage.featuredRecipes || {}
-      const recipesSlider = {
-        title: recipesBlock.title || '',
-        description: recipesBlock.description || '',
-        items: Array.isArray(recipesBlock.items)
-          ? recipesBlock.items.map((item) => ({
-              title: (item && item.name) || '',
-              image: safeImg(item && item.picture),
-              ctaLabel: commonDict.visitRecipeLabel || '',
-              ctaUrl: handleSlug(
-                locale,
-                'recipe',
-                item && item.slug ? item.slug : ''
-              ),
-            }))
-          : [],
-      }
-
-      // --- IMAGE SECTION (About Us) ----------------------------------------
-      const aboutUs = {
-        title: homepage.aboutUsTitle || '',
-        description: homepage.aboutUsDescription || '',
-        image: safeImg(homepage.aboutUsBackgroundImage),
-        ctaLabel: homepage.aboutUsCtaLabel || '',
+      ],
+      posters: homepage.featuredLines.map((entry, index) => ({
+        topImg: handleAltText(entry.imagePrimary),
+        title: entry.title,
+        description: entry.description,
+        bottomImg: handleAltText(entry.imageSecondary),
+        buttonLabel: entry.ctaLabel,
+        url: handleSlug(locale, 'lineLanding', entry.link.slug),
+        color: index === 0 ? 'cream' : 'green',
+      })),
+      recipesSlider: {
+        title: homepage.featuredRecipes.title,
+        description: homepage.featuredRecipes.description,
+        items: homepage.featuredRecipes.items.map((item) => ({
+          title: item.name,
+          image: handleAltText(item.picture),
+          ctaLabel: store.state.common[locale].visitRecipeLabel,
+          ctaUrl: handleSlug(locale, 'recipe', item.slug),
+        })),
+      },
+      aboutUs: {
+        title: homepage.aboutUsTitle,
+        description: homepage.aboutUsDescription,
+        image: handleAltText(homepage.aboutUsBackgroundImage),
+        ctaLabel: homepage.aboutUsCtaLabel,
         ctaUrl: handleSlug(locale, 'values'),
-      }
-
-      // --- PRODUCTS SLIDER --------------------------------------------------
-      const productsBlock = homepage.featuredProducts || {}
-      const productsSlider = {
-        title: productsBlock.title || '',
-        description: productsBlock.description || '',
-        items: Array.isArray(productsBlock.items)
-          ? productsBlock.items.map((item) => ({
-              title: (item && item.name) || '',
-              image:
-                item &&
-                item.pictures &&
-                item.pictures.length &&
-                item.pictures[0] &&
-                item.pictures[0].image
-                  ? safeImg(item.pictures[0].image)
-                  : '',
-              ctaLabel: commonDict.visitProductLabel || '',
-              ctaUrl: handleSlug(
-                locale,
-                'product',
-                item && item.slug ? item.slug : ''
-              ),
-            }))
-          : [],
-      }
-
-      return {
-        seo: homepage.seo,
-        hero,
-        overlay,
-        posters,
-        recipesSlider,
-        aboutUs,
-        productsSlider,
-      }
-    } catch (e) {
-      // messaggio chiaro per nuxt generate / netlify
-      error({
-        statusCode: 500,
-        message: 'Errore nel caricamento della homepage',
-      })
+      },
+      productsSlider: {
+        title: homepage.featuredProducts.title,
+        description: homepage.featuredProducts.description,
+        items: homepage.featuredProducts.items.map((item) => ({
+          title: item.name,
+          image:
+            item.pictures && item.pictures.length
+              ? handleAltText(item.pictures[0].image)
+              : '',
+          ctaLabel: store.state.common[locale].visitProductLabel,
+          ctaUrl: handleSlug(locale, 'product', item.slug),
+        })),
+      },
     }
   },
-
   data() {
     return {
       hero: {},
