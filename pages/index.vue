@@ -12,7 +12,9 @@
       :discover-more="hero.discoverMore"
       next-section-id="posters"
     />
+
     <Posters id="posters" :items="posters" />
+
     <Slider
       :title="recipesSlider.title"
       :description="recipesSlider.description"
@@ -21,6 +23,7 @@
       :initial-slide="3"
       cover
     />
+
     <ImageSection
       :title="aboutUs.title"
       :description="aboutUs.description"
@@ -28,12 +31,14 @@
       :cta-label="aboutUs.ctaLabel"
       :cta-url="aboutUs.ctaUrl"
     />
+
     <Slider
       :title="productsSlider.title"
       :description="productsSlider.description"
       :items="productsSlider.items"
       :items-per-group="3"
     />
+
     <CtaOverlay :buttons="overlay" />
   </main>
 </template>
@@ -59,142 +64,123 @@ export default {
   },
   extends: BasePage,
 
-  async asyncData({ app, store }) {
-    const locale = app.i18n.locale
-    const { homepage } = await ApiService.getHome(locale)
+  async asyncData({ app, store, error }) {
+    try {
+      const locale = app.i18n.locale
+      const { homepage } = await ApiService.getHome(locale)
 
-    // Costruisce l'URL in base al tipo di record collegato in `featuredLines.link`
-    const urlFromLink = (link) => {
-      if (!link || !link._modelApiKey) return '#'
-      switch (link._modelApiKey) {
-        case 'product_line_landing':
-          return handleSlug(locale, 'lineLanding', link.slug)
-        case 'product_line':
-          return handleSlug(locale, 'line', link.slug) // usa questa rotta se presente
-        case 'lines_page':
-          return handleSlug(locale, 'lines')
-        case 'origins_page':
-          return handleSlug(locale, 'origins')
-        case 'agings_page':
-          return handleSlug(locale, 'agings')
-        case 'products_page':
-          return handleSlug(locale, 'products')
-        default:
-          return '#'
-      }
-    }
+      // Fallback “safe” se qualche campo manca
+      const images = homepage && homepage.images ? homepage.images : []
+      const heroButtons =
+        homepage && homepage.heroButtons ? homepage.heroButtons : []
+      const featuredLines =
+        homepage && homepage.featuredLines ? homepage.featuredLines : []
+      const featuredRecipes =
+        homepage && homepage.featuredRecipes
+          ? homepage.featuredRecipes
+          : { items: [] }
+      const featuredProducts =
+        homepage && homepage.featuredProducts
+          ? homepage.featuredProducts
+          : { items: [] }
 
-    return {
-      seo: homepage.seo,
+      return {
+        seo: homepage ? homepage.seo : null,
 
-      hero: {
-        titleSmall: homepage.titleSmall,
-        titleLarge: homepage.titleLarge,
-        subTitle: homepage.subtitle,
-        description: homepage.description,
-        discoverMore: homepage.discoverMore,
-        images: (homepage.images || []).map((img) => handleAltText(img)),
-        imagesTimeout: homepage.imagesTimeout,
-        buttons: [
+        hero: {
+          titleSmall: homepage ? homepage.titleSmall : '',
+          titleLarge: homepage ? homepage.titleLarge : '',
+          subTitle: homepage ? homepage.subtitle : '',
+          description: homepage ? homepage.description : '',
+          discoverMore: homepage ? homepage.discoverMore : '',
+          images: images.map((img) => handleAltText(img)),
+          imagesTimeout: homepage ? homepage.imagesTimeout : 5000,
+          buttons: [
+            heroButtons[0]
+              ? {
+                  label: heroButtons[0].label,
+                  to: handleSlug(locale, 'subHomeProducts'),
+                  background: handleAltText(heroButtons[0].background),
+                }
+              : null,
+            heroButtons[1]
+              ? {
+                  label: heroButtons[1].label,
+                  to: handleSlug(locale, 'subHomeRecipes'),
+                  background: handleAltText(heroButtons[1].background),
+                }
+              : null,
+          ].filter(Boolean),
+        },
+
+        overlay: [
           {
-            label:
-              homepage.heroButtons && homepage.heroButtons[0]
-                ? homepage.heroButtons[0].label
-                : '',
+            label: homepage ? homepage.overlayProductsLabel : '',
             to: handleSlug(locale, 'subHomeProducts'),
-            background:
-              homepage.heroButtons && homepage.heroButtons[0]
-                ? handleAltText(homepage.heroButtons[0].background)
-                : '',
           },
           {
-            label:
-              homepage.heroButtons && homepage.heroButtons[1]
-                ? homepage.heroButtons[1].label
-                : '',
+            label: homepage ? homepage.overlayRecipesLabel : '',
             to: handleSlug(locale, 'subHomeRecipes'),
-            background:
-              homepage.heroButtons && homepage.heroButtons[1]
-                ? handleAltText(homepage.heroButtons[1].background)
-                : '',
           },
         ],
-      },
 
-      overlay: [
-        {
-          label: homepage.overlayProductsLabel,
-          to: handleSlug(locale, 'subHomeProducts'),
+        // Lasciamo la logica invariata (come prima), con fallback difensivi
+        posters: featuredLines.map((entry, index) => ({
+          topImg: handleAltText(entry.imagePrimary),
+          title: entry.title,
+          description: entry.description,
+          bottomImg: handleAltText(entry.imageSecondary),
+          buttonLabel: entry.ctaLabel,
+          // in DatoCMS questo link è la landing della linea (come in origine)
+          url: handleSlug(
+            locale,
+            'lineLanding',
+            entry.link ? entry.link.slug : ''
+          ),
+          color: index === 0 ? 'cream' : 'green',
+        })),
+
+        recipesSlider: {
+          title: featuredRecipes.title || '',
+          description: featuredRecipes.description || '',
+          items: (featuredRecipes.items || []).map((item) => ({
+            title: item.name,
+            image: handleAltText(item.picture),
+            ctaLabel: store.state.common[locale].visitRecipeLabel,
+            ctaUrl: handleSlug(locale, 'recipe', item.slug),
+          })),
         },
-        {
-          label: homepage.overlayRecipesLabel,
-          to: handleSlug(locale, 'subHomeRecipes'),
+
+        aboutUs: {
+          title: homepage ? homepage.aboutUsTitle : '',
+          description: homepage ? homepage.aboutUsDescription : '',
+          image: handleAltText(
+            homepage ? homepage.aboutUsBackgroundImage : null
+          ),
+          ctaLabel: homepage ? homepage.aboutUsCtaLabel : '',
+          ctaUrl: handleSlug(locale, 'values'),
         },
-      ],
 
-      // 🔧 Mapping posters corretto
-      posters: (homepage.featuredLines || []).map((entry, index) => ({
-        topImg: handleAltText(entry.imagePrimary),
-        title: entry.title,
-        description: entry.description,
-        bottomImg: entry.imageSecondary
-          ? handleAltText(entry.imageSecondary)
-          : '',
-        buttonLabel: entry.ctaLabel,
-        url: urlFromLink(entry.link),
-        color: index % 2 === 0 ? 'cream' : 'green',
-      })),
-
-      recipesSlider: {
-        title: homepage.featuredRecipes ? homepage.featuredRecipes.title : '',
-        description: homepage.featuredRecipes
-          ? homepage.featuredRecipes.description
-          : '',
-        items:
-          homepage.featuredRecipes && homepage.featuredRecipes.items
-            ? homepage.featuredRecipes.items.map((item) => ({
-                title: item.name,
-                image: handleAltText(item.picture),
-                ctaLabel:
-                  store.state.common[locale] &&
-                  store.state.common[locale].visitRecipeLabel
-                    ? store.state.common[locale].visitRecipeLabel
-                    : '',
-                ctaUrl: handleSlug(locale, 'recipe', item.slug),
-              }))
-            : [],
-      },
-
-      aboutUs: {
-        title: homepage.aboutUsTitle,
-        description: homepage.aboutUsDescription,
-        image: handleAltText(homepage.aboutUsBackgroundImage),
-        ctaLabel: homepage.aboutUsCtaLabel,
-        ctaUrl: handleSlug(locale, 'values'),
-      },
-
-      productsSlider: {
-        title: homepage.featuredProducts ? homepage.featuredProducts.title : '',
-        description: homepage.featuredProducts
-          ? homepage.featuredProducts.description
-          : '',
-        items:
-          homepage.featuredProducts && homepage.featuredProducts.items
-            ? homepage.featuredProducts.items.map((item) => ({
-                title: item.name,
-                image:
-                  item.pictures && item.pictures.length
-                    ? handleAltText(item.pictures[0].image)
-                    : '',
-                ctaLabel:
-                  store.state.common[locale] &&
-                  store.state.common[locale].visitProductLabel
-                    ? store.state.common[locale].visitProductLabel
-                    : '',
-                ctaUrl: handleSlug(locale, 'product', item.slug),
-              }))
-            : [],
-      },
+        productsSlider: {
+          title: featuredProducts.title || '',
+          description: featuredProducts.description || '',
+          items: (featuredProducts.items || []).map((item) => ({
+            title: item.name,
+            image:
+              item.pictures && item.pictures.length
+                ? handleAltText(item.pictures[0].image)
+                : '',
+            ctaLabel: store.state.common[locale].visitProductLabel,
+            ctaUrl: handleSlug(locale, 'product', item.slug),
+          })),
+        },
+      }
+    } catch (e) {
+      // se qualcosa va storto evitiamo di stampare query in pagina
+      error({
+        statusCode: 500,
+        message: 'Errore nel caricamento della homepage',
+      })
     }
   },
 
