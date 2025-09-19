@@ -42,17 +42,14 @@
       </p>
     </section>
 
-    <!-- GALLERY: xs=1 col, sm=2 col, lg=3 col -->
+    <!-- GALLERY: mobile=2 col, lg=3 col -->
     <section class="container pb-60">
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-      >
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         <article
           v-for="(block, idx) in gallery"
           :key="block.id || idx"
           class="rounded-2xl overflow-hidden bg-white shadow-md"
         >
-          <!-- Il contenuto arriva da DatoCMS come HTML controllato -->
           <!-- eslint-disable-next-line vue/no-v-html -->
           <div
             class="prose max-w-none ricettari-card"
