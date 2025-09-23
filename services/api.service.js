@@ -862,6 +862,74 @@ function getPrivacyPoliciesPage(locale) {
   return request({ query })
 }
 
+function getSustainabilityPage(locale) {
+  const query = `
+    query SustainabilityPage {
+      sustainability(locale: ${locale}) {
+        title
+        paragraph
+        seo {
+          description
+          title
+          twitterCard
+          image { url alt filename }
+        }
+        hero {
+          title
+          description
+          openLabel
+          closeLabel
+          backgroundImage {
+            url
+            alt
+            filename
+            responsiveImage(imgixParams: { fit: clip, w: 1920, auto: format }) {
+              src
+              srcSet
+              width
+              height
+              alt
+              title
+            }
+          }
+          items {
+            ... on ModularSectionRecord {
+              _modelApiKey
+              inverted
+              theme
+              images { url alt filename }
+              content {
+                ... on TitleRecord { _modelApiKey content(markdown: true) }
+                ... on ParagraphRecord { _modelApiKey title content }
+              }
+            }
+            # Se in futuro userai anche la timeline, tenerla già compatibile non fa male:
+            ... on TimelineRecord {
+              _modelApiKey
+              title
+              items {
+                title
+                image { url alt filename }
+                content {
+                  ... on TitleRecord { _modelApiKey content }
+                  ... on ParagraphRecord { _modelApiKey title content }
+                  ... on ImageRecord { _modelApiKey image { url alt filename } }
+                  ... on VideoRecord {
+                    _modelApiKey
+                    video { url mimeType }
+                    thumbnail { url alt filename }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+  return request({ query })
+}
+
 function getCompanyStoryPage(locale) {
   const query = `
     query CompanyStoryPage {
@@ -2243,6 +2311,7 @@ function getRecipeRatings(recipeId) {
 }
 
 export default {
+  getSustainabilityPage,
   getRicettariDownloadPage,
   getRicettariPage,
   getCommon,
