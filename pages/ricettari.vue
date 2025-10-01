@@ -11,7 +11,7 @@
         object-fit="cover"
       />
       <div
-        class="relative z-20 container flex flex-col items-center justify-center text-center text-white"
+        class="relative z-20 flex flex-col items-center justify-center text-center text-white"
       >
         <p class="uppercase text-50 lg:text-80 font-heading no-mobile">
           {{ title }}
@@ -20,19 +20,19 @@
     </div>
 
     <!-- BODY -->
-    <section class="container py-40">
+    <section class="container py-20">
       <h1
         class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile"
       >
         {{ titlebody }}
       </h1>
 
-      <h3
+      <h2
         v-if="subtitlebody"
         class="modular-section__paragraph-title font-bold uppercase mb-10 text-cocoa-500 text-center md:text-22 h3-mobile"
       >
         {{ subtitlebody }}
-      </h3>
+      </h2>
 
       <p
         v-if="textbody"
@@ -43,7 +43,7 @@
     </section>
 
     <!-- BREVO FORM -->
-    <section class="container py-60">
+    <section class="py-50">
       <!-- embed controllato: iframe Brevo -->
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="prose max-w-none" v-html="brevoForm"></div>

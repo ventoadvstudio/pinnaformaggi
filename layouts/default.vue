@@ -18,6 +18,7 @@
     />
   </div>
 </template>
+
 <script>
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
@@ -42,7 +43,8 @@ export default {
     },
     items() {
       const locale = this.$i18n.locale
-      return [
+
+      const items = [
         {
           label: this.header.menu.productsLabel,
           entries: this.header.menu.featuredLines.map((el) => ({
@@ -60,16 +62,49 @@ export default {
         },
         {
           label: this.header.menu.companyLabel,
-          entries: this.header.menu.featuredCompanyPages.map((el) => ({
-            label: el.label,
-            link: handleSlug(locale, el.link._modelApiKey, el.link.slug),
-          })),
-        },
-        {
-          label: this.header.menu.contactsLabel,
-          link: handleSlug(locale, 'contacts'),
+          // Dropdown AZIENDA con le tre voci richieste
+          entries: [
+            {
+              label: locale === 'it' ? 'Chi siamo' : 'About us',
+              link: this.localePath(
+                locale === 'it' ? '/azienda/chi-siamo/' : '/company/about-us/'
+              ),
+            },
+            {
+              label: locale === 'it' ? 'La nostra storia' : 'Our story',
+              link: this.localePath(
+                locale === 'it' ? '/azienda/storia/' : '/company/story/'
+              ),
+            },
+            {
+              label: locale === 'it' ? 'I nostri valori' : 'Our values',
+              link: this.localePath(
+                locale === 'it'
+                  ? '/azienda/i-nostri-valori/'
+                  : '/company/our-values/'
+              ),
+            },
+          ],
         },
       ]
+
+      // Voce top-level: Sostenibilità / Sustainability
+      items.splice(3, 0, {
+        label:
+          this.header.menu.sustainabilityLabel ||
+          (locale === 'it' ? 'Sostenibilità' : 'Sustainability'),
+        link: this.localePath(
+          locale === 'it' ? '/azienda/sostenibilita' : '/company/sustainability'
+        ),
+      })
+
+      // Contatti
+      items.push({
+        label: this.header.menu.contactsLabel,
+        link: handleSlug(locale, 'contacts'),
+      })
+
+      return items
     },
     footer() {
       return {
@@ -114,6 +149,7 @@ export default {
   },
 }
 </script>
+
 <style>
 body {
   font-family: 'Open Sans', sans-serif;

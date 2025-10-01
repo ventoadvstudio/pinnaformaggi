@@ -58,6 +58,39 @@
         </article>
       </div>
     </section>
+
+    <div id="form-ricettari" class="bg-olive">
+      <!--testo sopra il form-->
+      <section class="container py-120">
+        <h1
+          class="uppercase font-title font-medium text-primary md:text-40 text-center h1-mobile light"
+        >
+          {{ titleform }}
+        </h1>
+
+        <h2
+          v-if="subtitleform"
+          class="modular-section__paragraph-title font-bold uppercase mb-10 text-cocoa-500 text-center md:text-22 h2-mobile text-cream"
+        >
+          {{ subtitleform }}
+        </h2>
+
+        <p
+          v-if="textform"
+          class="text-base leading-relaxed text-center p-mobile light"
+        >
+          {{ textform }}
+        </p>
+      </section>
+
+      <!-- BREVO FORM -->
+
+      <section>
+        <!-- embed controllato: iframe Brevo -->
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="prose max-w-none" v-html="brevoForm"></div>
+      </section>
+    </div>
   </main>
 </template>
 
@@ -79,14 +112,46 @@ export default {
         titlebody: data.titlebody || '',
         subtitlebody: data.subtitlebody || '',
         textbody: data.textbody || '',
+        // testo sopra il form
+        titleform: data.titleform || '',
+        subtitleform: data.subtitleform || '',
+        textform: data.textform || '',
         // gallery di blocchi html
         gallery: Array.isArray(data.gallery) ? data.gallery : [],
+        // brevo form
+        brevoForm: data.brevoForm || '',
         // seo
         seo: data.seo || [],
         title: 'Ricettari',
       }
     } catch (e) {
       error({ statusCode: 404, message: 'Pagina non trovata' })
+    }
+  },
+
+  mounted() {
+    // Migliora performance/a11y dell’iframe Brevo, se presente
+    this.$nextTick(() => {
+      const iframe = document.querySelector('.prose iframe')
+      if (iframe) {
+        iframe.setAttribute('loading', 'lazy')
+        iframe.setAttribute('title', 'Iscrizione Ricettari Brevo')
+        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin')
+        iframe.setAttribute(
+          'sandbox',
+          'allow-forms allow-scripts allow-same-origin'
+        )
+      }
+    })
+
+    // Carica dinamicamente lo script Brevo se non già presente
+    if (!document.getElementById('brevo-form-js')) {
+      const script = document.createElement('script')
+      script.id = 'brevo-form-js'
+      script.src =
+        'https://cdn.jsdelivr.net/gh/Ventoadv/form-brevo@2c19289/brevo-form.js'
+      script.defer = true
+      document.body.appendChild(script)
     }
   },
 

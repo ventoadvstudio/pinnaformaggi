@@ -45,6 +45,7 @@
                   :object-fit="cover ? 'cover' : 'contain'"
                   class="slider__item-image absolute top-0 right-0 bottom-0 left-0 w-full h-full"
                   :class="cover ? 'object-cover' : 'object-contain'"
+                  :lazy-load="false"
                 />
               </div>
               <div class="slider__item-text flex flex-col items-center">
