@@ -61,6 +61,11 @@ const RICETTARI_DOWNLOAD_QUERY = `
       titlebody
       subtitlebody
       textbody
+      
+      titleform
+      subtitleform
+      textform
+
 gallery: mokupricettari {
   __typename
   ... on RicettariGalleryRecord {
@@ -68,7 +73,8 @@ gallery: mokupricettari {
     htmlRicettari
   }
 }
-      seo: _seoMetaTags {
+     brevoForm 
+seo: _seoMetaTags {
         attributes
         content
         tag
@@ -854,6 +860,56 @@ function getPrivacyPoliciesPage(locale) {
           twitterCard
           image {
             url
+          }
+        }
+      }
+    }
+  `
+  return request({ query })
+}
+
+function getAboutPage(locale) {
+  const query = `
+    query AboutPage {
+      about(locale: ${locale}) {
+        title
+        paragraph(markdown: true)   # HTML pronto per v-html (sanitizzato)
+        seo {
+          description
+          title
+          twitterCard
+          image { url alt filename }
+        }
+        hero {
+          title
+          description
+          openLabel
+          closeLabel
+          backgroundImage {
+            url
+            alt
+            filename
+            responsiveImage(imgixParams: { fit: clip, w: 1920, auto: format }) {
+              src
+              srcSet
+              width
+              height
+              alt
+              title
+            }
+          }
+          items {
+            ... on ModularSectionRecord {
+              _modelApiKey
+              inverted
+              theme
+              images { url alt filename }
+              content {
+                ... on TitleRecord { _modelApiKey content(markdown: true) }
+                ... on ParagraphRecord { _modelApiKey title content }
+              }
+            }
+            # Se hai timeline/altro, mantieni i frammenti come usato nelle pagine azienda
           }
         }
       }
@@ -2311,6 +2367,7 @@ function getRecipeRatings(recipeId) {
 }
 
 export default {
+  getAboutPage,
   getSustainabilityPage,
   getRicettariDownloadPage,
   getRicettariPage,
