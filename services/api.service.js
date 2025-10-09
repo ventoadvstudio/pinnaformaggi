@@ -27,12 +27,7 @@ const RICETTARI_QUERY = `
       subtitlebody
       textbody(markdown: false)
 
-      brevoForm
-      seo: _seoMetaTags {
-        attributes
-        content
-        tag
-      }
+
     }
   }
 `

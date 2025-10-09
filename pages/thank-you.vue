@@ -41,13 +41,6 @@
         {{ textbody }}
       </p>
     </section>
-
-    <!-- BREVO FORM -->
-    <section class="py-50">
-      <!-- embed controllato: iframe Brevo -->
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <div class="prose max-w-none" v-html="brevoForm"></div>
-    </section>
   </main>
 </template>
 
