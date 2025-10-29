@@ -92,6 +92,16 @@ export default {
         ),
       })
 
+      // Voce top-level: Ricettari / Ricepe Books
+      items.splice(3, 0, {
+        label:
+          this.header.menu.recipebooks ||
+          (locale === 'it' ? 'Ricettari' : 'Ricepe Books'),
+        link: this.localePath(
+          locale === 'it' ? '/azienda/Ricettari' : '/company/recipe-books'
+        ),
+      })
+
       // Contatti
       items.push({
         label: this.header.menu.contactsLabel,
