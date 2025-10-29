@@ -65,12 +65,6 @@ export default {
           // Dropdown AZIENDA con le tre voci richieste
           entries: [
             {
-              label: locale === 'it' ? 'Chi siamo' : 'About us',
-              link: this.localePath(
-                locale === 'it' ? '/azienda/chi-siamo/' : '/company/about-us/'
-              ),
-            },
-            {
               label: locale === 'it' ? 'La nostra storia' : 'Our story',
               link: this.localePath(
                 locale === 'it' ? '/azienda/storia/' : '/company/story/'
