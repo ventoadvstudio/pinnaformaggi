@@ -98,7 +98,7 @@ export default {
           this.header.menu.recipebooks ||
           (locale === 'it' ? 'Ricettari' : 'Ricepe Books'),
         link: this.localePath(
-          locale === 'it' ? '/azienda/Ricettari' : '/company/recipe-books'
+          locale === 'it' ? '/scarica-ricettari/' : '/scarica-ricettari/'
         ),
       })
 
