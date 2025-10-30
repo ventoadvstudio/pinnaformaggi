@@ -47,7 +47,6 @@ export default {
         // chi siamo
         {
           label: this.header.menu.companyLabel,
-          // Dropdown AZIENDA con le tre voci richieste
           entries: [
             {
               label: locale === 'it' ? 'La nostra storia' : 'Our story',
@@ -86,8 +85,8 @@ export default {
         },
       ]
 
-      // Voce top-level: Sostenibilità / Sustainability
-      items.splice(3, 0, {
+      // Inserisci Sostenibilità subito dopo "Chi siamo" (index 1)
+      items.splice(1, 0, {
         label:
           this.header.menu.sustainabilityLabel ||
           (locale === 'it' ? 'Sostenibilità' : 'Sustainability'),
@@ -96,8 +95,8 @@ export default {
         ),
       })
 
-      // Voce top-level: Ricettari / Ricepe Books
-      items.splice(3, 0, {
+      // Inserisci Ricettari dopo "Ricette" (ora index 4)
+      items.splice(4, 0, {
         label:
           this.header.menu.recipebooks ||
           (locale === 'it' ? 'Ricettari' : 'Ricepe Books'),
