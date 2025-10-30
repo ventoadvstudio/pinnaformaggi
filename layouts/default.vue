@@ -43,23 +43,8 @@ export default {
     },
     items() {
       const locale = this.$i18n.locale
-
       const items = [
-        {
-          label: this.header.menu.productsLabel,
-          entries: this.header.menu.featuredLines.map((el) => ({
-            label: el.label,
-            link: handleSlug(locale, el.link._modelApiKey, el.link.slug),
-          })),
-        },
-        {
-          label: this.header.menu.recipesLabel,
-          entries: this.header.menu.featuredCategories.map((el) => ({
-            label: el.label,
-            link: handleSlug(locale, el.link._modelApiKey, el.link.slug),
-            special: el.button,
-          })),
-        },
+        // chi siamo
         {
           label: this.header.menu.companyLabel,
           // Dropdown AZIENDA con le tre voci richieste
@@ -79,6 +64,25 @@ export default {
               ),
             },
           ],
+        },
+
+        // formaggi
+        {
+          label: this.header.menu.productsLabel,
+          entries: this.header.menu.featuredLines.map((el) => ({
+            label: el.label,
+            link: handleSlug(locale, el.link._modelApiKey, el.link.slug),
+          })),
+        },
+
+        // ricette
+        {
+          label: this.header.menu.recipesLabel,
+          entries: this.header.menu.featuredCategories.map((el) => ({
+            label: el.label,
+            link: handleSlug(locale, el.link._modelApiKey, el.link.slug),
+            special: el.button,
+          })),
         },
       ]
 
