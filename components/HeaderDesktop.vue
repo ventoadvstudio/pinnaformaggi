@@ -27,7 +27,7 @@
             v-for="(item, i) in items"
             :key="item.label"
             class="header-desktop__menu-entry"
-            :class="{ 'mr-40': i < items.length - 1 }"
+            :class="{ 'mr-30': i < items.length - 1 }"
           >
             <button
               v-if="item.entries"
