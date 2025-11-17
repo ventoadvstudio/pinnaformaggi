@@ -61,11 +61,21 @@
                     >
                       {{ entry.title }}
                     </h3>
-                    <p class="modular-section__paragraph-content text-gray-500">
-                      {{ entry.content }}
-                    </p>
+                    <div
+                      class="modular-section__paragraph-content text-gray-500"
+                      v-html="sanitizeParagraph(entry.content)"
+                    ></div>
                   </div>
                 </template>
+                <a
+                  v-if="item.link_cta"
+                  :href="item.link_cta"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-block mt-8 px-6 py-3 bg-primary text-white font-bold uppercase text-sm rounded hover:bg-primary-dark transition-colors"
+                >
+                  Scarica PDF
+                </a>
               </div>
             </div>
           </div>
@@ -129,6 +139,14 @@ export default {
       return this.$sanitize(str, {
         allowedTags: ['br'],
         allowedAttributes: {},
+      })
+    },
+    sanitizeParagraph(string) {
+      return this.$sanitize(string, {
+        allowedTags: ['p', 'br', 'strong', 'em', 'u', 'a'],
+        allowedAttributes: {
+          'a': ['href', 'target', 'rel'],
+        },
       })
     },
   },
